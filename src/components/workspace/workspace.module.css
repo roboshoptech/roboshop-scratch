@@ -1,0 +1,10 @@
+.workspace-container {
+  display: grid;
+  position: relative;
+}
+
+.workspace-execute-btn {
+  position: absolute;
+  bottom: var(--sp-8);
+  left: 50%;
+}
