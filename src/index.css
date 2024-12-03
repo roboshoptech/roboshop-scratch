@@ -36,4 +36,8 @@ div#root {
   --sp-8: 32px;
   --sp-9: 36px;
   --sp-X: 40px;
+  --sp-xs: 312px;
+  --sp-sm: 636px;
+  --sp-md: 960px;
+  --sp-lg: 1272px;
 }

@@ -203,10 +203,17 @@ export const TOOLBOX_CONFIG = {
       kind: "category",
       name: "Variables",
       colour: "0",
-      contents: Object.keys(variablesDynamic.blocks).map((key) => ({
-        kind: "block",
-        type: key,
-      })),
+      contents: [
+        {
+          kind: "button",
+          text: "Create variable...",
+          callbackKey: "create-variable-btn",
+        },
+        ...Object.keys(variablesDynamic.blocks).map((key) => ({
+          kind: "block",
+          type: key,
+        })),
+      ],
     },
     {
       kind: "category",

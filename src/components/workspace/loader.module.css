@@ -8,6 +8,7 @@
   padding: var(--sp-2);
   display: grid;
   gap: var(--sp-2);
+  min-width: 312px;
 }
 
 .main hr {
