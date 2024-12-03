@@ -1,0 +1,28 @@
+.main {
+  position: absolute;
+  top: var(--sp-4);
+  right: var(--sp-4);
+  border: 1px solid lightgray;
+  border-radius: var(--sp-1);
+  background-color: white;
+  padding: var(--sp-2);
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.main hr {
+  margin: 0;
+  /* margin-inline: 0;
+  margin-block: var(--sp-2); */
+}
+
+.project-title {
+  font-weight: bold;
+  font-size: large;
+}
+
+.linear-form {
+  display: flex;
+  gap: var(--sp-1);
+  align-items: center;
+}

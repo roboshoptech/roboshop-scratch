@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { useBlocklyWorkspace } from "react-blockly";
 import { javascriptGenerator } from "blockly/javascript";
 import { TOOLBOX_CONFIG } from "./toolbox";
+import { WorkspaceLoader } from "./loader";
 
 export function ScratchWorkspace() {
   const blocklyRef = useRef(null);
@@ -34,6 +35,7 @@ export function ScratchWorkspace() {
   return (
     <div className={styles["workspace-container"]}>
       <div ref={blocklyRef} />
+      {workspace != null && <WorkspaceLoader workspace={workspace} />}
       <button
         className={styles["workspace-execute-btn"]}
         onClick={handleExecute}
