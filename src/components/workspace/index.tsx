@@ -2,18 +2,14 @@
 
 import styles from "./workspace.module.css";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useBlocklyWorkspace } from "react-blockly";
-import { javascriptGenerator } from "blockly/javascript";
+
 import { TOOLBOX_CONFIG } from "./toolbox";
 import { WorkspaceLoader } from "./loader";
-import { useToggle } from "../../utils/use-toggle";
-import { Dialog, DialogActions } from "../common/modal-dialog";
-import { Grid } from "../common/box";
-import { button } from "../common/button";
 
 export function ScratchWorkspace() {
-  const [openCreateVariableDialog, toggleCreateVariableDialog] = useToggle();
+  // const [openCreateVariableDialog, toggleCreateVariableDialog] = useToggle();
   const blocklyRef = useRef(null);
   const { workspace, xml } = useBlocklyWorkspace({
     ref: blocklyRef,
@@ -25,14 +21,14 @@ export function ScratchWorkspace() {
     initialXml: "",
   });
 
-  useEffect(() => {
-    if (!workspace) return;
+  // useEffect(() => {
+  //   if (!workspace) return;
 
-    workspace?.registerButtonCallback("create-variable-btn", () => {
-      // console.log("create variable button");
-      toggleCreateVariableDialog();
-    });
-  }, [workspace]);
+  //   workspace?.registerButtonCallback("create-variable-btn", () => {
+  //     // console.log("create variable button");
+  //     toggleCreateVariableDialog();
+  //   });
+  // }, [workspace]);
 
   // function handleExecute() {
   //   javascriptGenerator.addReservedWords("code");
@@ -46,20 +42,20 @@ export function ScratchWorkspace() {
   //   }
   // }
 
-  function handleCreateVariable(e: any) {
-    e.preventDefault();
-    const vname = e.currentTarget["variable-name"].value;
-    if (!vname || workspace == null) return;
+  // function handleCreateVariable(e: any) {
+  //   e.preventDefault();
+  //   const vname = e.currentTarget["variable-name"].value;
+  //   if (!vname || workspace == null) return;
 
-    workspace.createVariable(vname);
-    toggleCreateVariableDialog();
-  }
+  //   workspace.createVariable(vname);
+  //   toggleCreateVariableDialog();
+  // }
 
   return (
     <div className={styles["workspace-container"]}>
       <div ref={blocklyRef} />
       {workspace != null && <WorkspaceLoader workspace={workspace} />}
-      <Dialog open={openCreateVariableDialog}>
+      {/* <Dialog open={openCreateVariableDialog}>
         <form onSubmit={handleCreateVariable}>
           <Grid
             maxWidth="var(--sp-sm)"
@@ -85,7 +81,7 @@ export function ScratchWorkspace() {
             </DialogActions>
           </Grid>
         </form>
-      </Dialog>
+      </Dialog> */}
       {/* <button
         className={styles["workspace-execute-btn"]}
         onClick={handleExecute}
