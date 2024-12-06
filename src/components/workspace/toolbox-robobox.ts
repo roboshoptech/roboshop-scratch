@@ -1,7 +1,8 @@
 import { defineBlocksWithJsonArray } from "blockly";
 import { javascriptGenerator, Order } from "blockly/javascript";
+import { arduinoGenerator } from "./generators/arduino";
 
-const generator = javascriptGenerator;
+const generator = arduinoGenerator;
 
 export const ROBOBOX_TOOLBOX_CONFIG = {
   kind: "category",
@@ -77,9 +78,7 @@ generator.forBlock["robobox_sensor_ultrasonic_distance"] = function (
     Order.ATOMIC
   );
   const varName = generator.getVariableName("value");
-  const fnName = generator.provideFunction_(
-    "robobox_sensor_distance",
-    `\
+  const fnCode = `\
 int robobox_sensor_distance(byte trig_pin, byte dist_pin) {
     digitalWrite(trig_pin,HIGH);
     delayMicroseconds(1000);
@@ -88,8 +87,9 @@ int robobox_sensor_distance(byte trig_pin, byte dist_pin) {
     if (${varName}>255) { ${varName}=255; }
     delay(20);
     return ${varName};
-}`
-  );
+}`;
+  const fnName = generator.provideFunction_("robobox_sensor_distance", fnCode);
+  generator.addFunction(fnName, fnCode);
   // TODO: Assemble javascript into the code variable.
   const code = `${fnName}(${value_trigger_pin}, ${value_listen_pin})`;
   // TODO: Change Order.NONE to the correct operator precedence strength

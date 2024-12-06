@@ -16,6 +16,7 @@ import { ToggleView } from "../common/toggle-view";
 import { APP_PROJECT } from "../../utils/constants";
 import { Box, Flex, Grid } from "../common/box";
 import { spinner } from "../common/spinner";
+import { arduinoGenerator } from "./generators/arduino";
 
 type Props = {
   workspace: WorkspaceSvg;
@@ -26,7 +27,7 @@ type ProjectData = {
   name: string;
 };
 
-const generator = javascriptGenerator;
+const generator = arduinoGenerator;
 
 export function WorkspaceLoader({ workspace }: Props) {
   // const [title, setTitle] = useState("");

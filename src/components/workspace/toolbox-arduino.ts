@@ -1,7 +1,8 @@
 import { javascriptGenerator, Order } from "blockly/javascript";
 import { defineBlocksWithJsonArray } from "blockly";
+import { arduinoGenerator } from "./generators/arduino";
 
-const generator = javascriptGenerator;
+const generator = arduinoGenerator;
 
 export const ARDUINO_TOOLBOX_CONFIG = {
   kind: "category",
@@ -369,12 +370,13 @@ void loop() {
   return code;
 };
 
-generator.forBlock["arduino_include_library"] = function (block) {
+generator.forBlock["arduino_include_library"] = function (block, generator) {
   const text_libname = block.getFieldValue("LIBNAME");
 
   // TODO: Assemble javascript into the code variable.
-  const code = `#include "${text_libname}.h";`;
-  return code;
+  // const code = `#include "${text_libname}.h";`;
+  generator.addLibrary(text_libname, `#include "${text_libname}.h"`);
+  return "";
 };
 
 generator.forBlock["arduino_pinmode"] = function (block, generator) {
@@ -383,18 +385,27 @@ generator.forBlock["arduino_pinmode"] = function (block, generator) {
   const value_pin = generator.valueToCode(block, "PIN", Order.ATOMIC);
 
   // TODO: Assemble javascript into the code variable.
-  const code = `pinMode(${value_pin}, ${dropdown_mode});`;
-
-  return code;
+  // const code = `pinMode(${value_pin}, ${dropdown_mode});`;
+  generator.addUserSetup(
+    `pinmode_${value_pin}`,
+    `pinMode(${value_pin}, ${dropdown_mode});`
+  );
+  return "";
 };
 
 generator.forBlock["arduino_analog_read"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_name = generator.valueToCode(block, "PIN", Order.ATOMIC);
 
-  // TODO: Assemble javascript into the code variable.
-  const code = `digitalRead(${value_name});
-`;
+  if (isPin(value_name)) {
+    generator.addUserSetup(
+      `pinmode_${value_name}`,
+      `pinMode(${value_name}, INPUT);`
+    );
+  }
+
+  const code = `analogRead(${value_name})`;
+
   // TODO: Change Order.NONE to the correct operator precedence strength
   return [code, Order.NONE];
 };
@@ -404,8 +415,8 @@ generator.forBlock["arduino_digital_read"] = function (block, generator) {
   const value_name = generator.valueToCode(block, "PIN", Order.ATOMIC);
 
   // TODO: Assemble javascript into the code variable.
-  const code = `analogRead(${value_name});
-`;
+  const code = `digitalRead(${value_name})`;
+
   // TODO: Change Order.NONE to the correct operator precedence strength
   return [code, Order.NONE];
 };
@@ -414,10 +425,16 @@ generator.forBlock["arduino_digital_write"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_pin = generator.valueToCode(block, "PIN", Order.ATOMIC);
   const value_state = generator.valueToCode(block, "STATE", Order.ATOMIC);
+  console.log("arduino_digital_write", value_pin);
 
-  // TODO: Assemble javascript into the code variable.
-  const code = `digitalWrite(${value_pin}, ${value_state});
-`;
+  if (isPin(value_pin)) {
+    generator.addUserSetup(
+      `pinmode_${value_pin}`,
+      `pinMode(${value_pin}, OUTPUT);`
+    );
+  }
+
+  const code = `digitalWrite(${value_pin}, ${value_state});\n`;
   return code;
 };
 
@@ -490,10 +507,14 @@ defineBlocksWithJsonArray([
   },
 ]);
 
-generator.forBlock["arduino_serial_speed"] = function (block) {
+generator.forBlock["arduino_serial_speed"] = function (block, generator) {
   const dropdown_name = block.getFieldValue("NAME");
 
   // TODO: Assemble javascript into the code variable.
-  const code = `Serial.begin(${dropdown_name});`;
-  return code;
+  generator.addUserSetup(block.id, `Serial.begin(${dropdown_name});`);
+  return "";
 };
+
+function isPin(v: string) {
+  return !Number.isNaN(Number.parseInt(v, 16));
+}

@@ -3,8 +3,9 @@ import { lists, loops, math, texts } from "blockly/blocks";
 import { javascriptGenerator, Order } from "blockly/javascript";
 import { ARDUINO_TOOLBOX_CONFIG } from "./toolbox-arduino";
 import { ROBOBOX_TOOLBOX_CONFIG } from "./toolbox-robobox";
+import { arduinoGenerator } from "./generators/arduino";
 
-const generator = javascriptGenerator;
+const generator = arduinoGenerator;
 
 /// Display blocks
 
@@ -140,7 +141,7 @@ export const TOOLBOX_CONFIG = {
     {
       kind: "category",
       name: "Variables",
-      custom: "VARIABLE_DYNAMIC",
+      custom: "VARIABLE",
       colour: Msg.VARIABLES_DYNAMIC_HUE,
     },
     {
