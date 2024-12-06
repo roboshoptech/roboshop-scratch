@@ -26,6 +26,8 @@ type ProjectData = {
   name: string;
 };
 
+const generator = javascriptGenerator;
+
 export function WorkspaceLoader({ workspace }: Props) {
   // const [title, setTitle] = useState("");
   const [currentProject, setCurrentProject] = useState<ProjectData | null>(
@@ -174,11 +176,15 @@ export function WorkspaceLoader({ workspace }: Props) {
           className={button({ kind: "bold" })}
           title="Download code"
           onClick={() => {
-            downloadFile(
-              javascriptGenerator.workspaceToCode(workspace),
-              `${currentProject.name}.ino`,
-              "text/plain"
-            );
+            try {
+              // const code = javascriptGenerator.workspaceToCode(workspace)
+
+              const code = generator.workspaceToCode(workspace);
+              downloadFile(code, `${currentProject.name}.ino`, "text/plain");
+            } catch (err: any) {
+              alert(err.toString());
+              console.log((err as Error).stack?.toString());
+            }
           }}
         >
           <FaDownload size={16} />

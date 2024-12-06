@@ -1,6 +1,8 @@
 import { defineBlocksWithJsonArray } from "blockly";
 import { javascriptGenerator, Order } from "blockly/javascript";
 
+const generator = javascriptGenerator;
+
 export const ROBOBOX_TOOLBOX_CONFIG = {
   kind: "category",
   name: "Robobox",
@@ -9,6 +11,7 @@ export const ROBOBOX_TOOLBOX_CONFIG = {
     {
       kind: "category",
       name: "Sensors",
+      colour: "190",
       contents: [
         {
           kind: "block",
@@ -56,7 +59,7 @@ defineBlocksWithJsonArray([
   },
 ]);
 
-javascriptGenerator.forBlock["robobox_sensor_ultrasonic_distance"] = function (
+generator.forBlock["robobox_sensor_ultrasonic_distance"] = function (
   block,
   generator
 ) {

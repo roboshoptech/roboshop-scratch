@@ -1,6 +1,8 @@
 import { javascriptGenerator, Order } from "blockly/javascript";
 import { defineBlocksWithJsonArray } from "blockly";
 
+const generator = javascriptGenerator;
+
 export const ARDUINO_TOOLBOX_CONFIG = {
   kind: "category",
   name: "Arduino",
@@ -9,6 +11,7 @@ export const ARDUINO_TOOLBOX_CONFIG = {
     {
       kind: "category",
       name: "General",
+      colour: "180",
       contents: [
         {
           kind: "block",
@@ -131,6 +134,7 @@ export const ARDUINO_TOOLBOX_CONFIG = {
     {
       kind: "category",
       name: "Communication",
+      colour: "180",
       contents: [
         {
           kind: "block",
@@ -349,10 +353,7 @@ defineBlocksWithJsonArray([
   },
 ]);
 
-javascriptGenerator.forBlock["arduino_setup_loop"] = function (
-  block,
-  generator
-) {
+generator.forBlock["arduino_setup_loop"] = function (block, generator) {
   const statement_setup_code = generator.statementToCode(block, "SETUP_CODE");
   const statement_loop_code = generator.statementToCode(block, "LOOP_CODE");
 
@@ -368,7 +369,7 @@ void loop() {
   return code;
 };
 
-javascriptGenerator.forBlock["arduino_include_library"] = function (block) {
+generator.forBlock["arduino_include_library"] = function (block) {
   const text_libname = block.getFieldValue("LIBNAME");
 
   // TODO: Assemble javascript into the code variable.
@@ -376,7 +377,7 @@ javascriptGenerator.forBlock["arduino_include_library"] = function (block) {
   return code;
 };
 
-javascriptGenerator.forBlock["arduino_pinmode"] = function (block, generator) {
+generator.forBlock["arduino_pinmode"] = function (block, generator) {
   const dropdown_mode = block.getFieldValue("MODE");
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_pin = generator.valueToCode(block, "PIN", Order.ATOMIC);
@@ -387,10 +388,7 @@ javascriptGenerator.forBlock["arduino_pinmode"] = function (block, generator) {
   return code;
 };
 
-javascriptGenerator.forBlock["arduino_analog_read"] = function (
-  block,
-  generator
-) {
+generator.forBlock["arduino_analog_read"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_name = generator.valueToCode(block, "PIN", Order.ATOMIC);
 
@@ -401,10 +399,7 @@ javascriptGenerator.forBlock["arduino_analog_read"] = function (
   return [code, Order.NONE];
 };
 
-javascriptGenerator.forBlock["arduino_digital_read"] = function (
-  block,
-  generator
-) {
+generator.forBlock["arduino_digital_read"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_name = generator.valueToCode(block, "PIN", Order.ATOMIC);
 
@@ -415,10 +410,7 @@ javascriptGenerator.forBlock["arduino_digital_read"] = function (
   return [code, Order.NONE];
 };
 
-javascriptGenerator.forBlock["arduino_digital_write"] = function (
-  block,
-  generator
-) {
+generator.forBlock["arduino_digital_write"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_pin = generator.valueToCode(block, "PIN", Order.ATOMIC);
   const value_state = generator.valueToCode(block, "STATE", Order.ATOMIC);
@@ -429,10 +421,7 @@ javascriptGenerator.forBlock["arduino_digital_write"] = function (
   return code;
 };
 
-javascriptGenerator.forBlock["arduino_analog_write"] = function (
-  block,
-  generator
-) {
+generator.forBlock["arduino_analog_write"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_pin = generator.valueToCode(block, "PIN", Order.ATOMIC);
   const value_state = generator.valueToCode(block, "STATE", Order.ATOMIC);
@@ -443,10 +432,7 @@ javascriptGenerator.forBlock["arduino_analog_write"] = function (
   return code;
 };
 
-javascriptGenerator.forBlock["arduino_logic_state"] = function (
-  block,
-  generator
-) {
+generator.forBlock["arduino_logic_state"] = function (block, generator) {
   const dropdown_name = block.getFieldValue("NAME");
 
   // TODO: Assemble javascript into the code variable.
@@ -455,7 +441,7 @@ javascriptGenerator.forBlock["arduino_logic_state"] = function (
   return [code, Order.NONE];
 };
 
-javascriptGenerator.forBlock["arduino_delay"] = function (block, generator) {
+generator.forBlock["arduino_delay"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
 
@@ -464,7 +450,7 @@ javascriptGenerator.forBlock["arduino_delay"] = function (block, generator) {
   return code;
 };
 
-javascriptGenerator.forBlock["arduino_millis"] = function () {
+generator.forBlock["arduino_millis"] = function () {
   // TODO: Assemble javascript into the code variable.
   const code = `millis();`;
   // TODO: Change Order.NONE to the correct operator precedence strength
@@ -504,7 +490,7 @@ defineBlocksWithJsonArray([
   },
 ]);
 
-javascriptGenerator.forBlock["arduino_serial_speed"] = function (block) {
+generator.forBlock["arduino_serial_speed"] = function (block) {
   const dropdown_name = block.getFieldValue("NAME");
 
   // TODO: Assemble javascript into the code variable.

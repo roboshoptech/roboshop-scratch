@@ -1,8 +1,10 @@
-import { defineBlocksWithJsonArray } from "blockly";
+import { defineBlocksWithJsonArray, Msg } from "blockly";
 import { lists, loops, math, texts } from "blockly/blocks";
 import { javascriptGenerator, Order } from "blockly/javascript";
 import { ARDUINO_TOOLBOX_CONFIG } from "./toolbox-arduino";
 import { ROBOBOX_TOOLBOX_CONFIG } from "./toolbox-robobox";
+
+const generator = javascriptGenerator;
 
 /// Display blocks
 
@@ -22,11 +24,39 @@ defineBlocksWithJsonArray([
       },
     ],
   },
+  {
+    type: "math_angle",
+    tooltip: "",
+    helpUrl: "",
+    message0: "angle %1 %2",
+    args0: [
+      {
+        type: "field_angle",
+        name: "ANGLE",
+        angle: 90,
+      },
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    output: null,
+    colour: Msg.MATH_HUE,
+  },
 ]);
 
-javascriptGenerator.forBlock["display_single"] = (block, generator) => {
+generator.forBlock["display_single"] = (block, generator) => {
   const value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
   return `console.log(${value.toString()})`;
+};
+
+generator.forBlock["math_angle"] = function (block) {
+  const angle_angle = block.getFieldValue("ANGLE");
+
+  // TODO: Assemble javascript into the code variable.
+  const code = angle_angle;
+  // TODO: Change Order.NONE to the correct operator precedence strength
+  return [code, Order.NONE];
 };
 
 /// Toolbox
@@ -37,7 +67,7 @@ export const TOOLBOX_CONFIG = {
     {
       kind: "category",
       name: "Logic",
-      colour: "0",
+      colour: Msg.LOGIC_HUE,
       contents: [
         {
           kind: "block",
@@ -68,7 +98,7 @@ export const TOOLBOX_CONFIG = {
     {
       kind: "category",
       name: "Loops",
-      colour: "0",
+      colour: Msg.LOOPS_HUE,
       contents: Object.keys(loops.blocks).map((key) => ({
         kind: "block",
         type: key,
@@ -77,16 +107,22 @@ export const TOOLBOX_CONFIG = {
     {
       kind: "category",
       name: "Math",
-      colour: "0",
-      contents: Object.keys(math.blocks).map((key) => ({
-        kind: "block",
-        type: key,
-      })),
+      colour: Msg.MATH_HUE,
+      contents: [
+        ...Object.keys(math.blocks).map((key) => ({
+          kind: "block",
+          type: key,
+        })),
+        {
+          kind: "block",
+          type: "math_angle",
+        },
+      ],
     },
     {
       kind: "category",
       name: "List",
-      colour: "0",
+      colour: Msg.LISTS_HUE,
       contents: Object.keys(lists.blocks).map((key) => ({
         kind: "block",
         type: key,
@@ -95,7 +131,7 @@ export const TOOLBOX_CONFIG = {
     {
       kind: "category",
       name: "Text",
-      colour: "0",
+      colour: Msg.TEXTS_HUE,
       contents: Object.keys(texts.blocks).map((key) => ({
         kind: "block",
         type: key,
@@ -105,13 +141,13 @@ export const TOOLBOX_CONFIG = {
       kind: "category",
       name: "Variables",
       custom: "VARIABLE_DYNAMIC",
-      colour: "0",
+      colour: Msg.VARIABLES_DYNAMIC_HUE,
     },
     {
       kind: "category",
       name: "Functions",
       custom: "PROCEDURE",
-      colour: "0",
+      colour: Msg.PROCEDURES_HUE,
     },
     ARDUINO_TOOLBOX_CONFIG,
     ROBOBOX_TOOLBOX_CONFIG,
