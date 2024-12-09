@@ -181,11 +181,11 @@ int robobox_sensor_distance(byte trig_pin, byte dist_pin) {
 
 generator.forBlock["robobox_batrobot_drive_forward"] = function () {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_4`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_5`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_6`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_7`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_8`, `pinMode(3, OUTPUT);`);
+  generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
+  generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
+  generator.addSetup(`pinmode_6`, `pinMode(6, OUTPUT);`);
+  generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
+  generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
   const code = `
   analogWrite(6, 255);
@@ -199,11 +199,11 @@ generator.forBlock["robobox_batrobot_drive_forward"] = function () {
 
 generator.forBlock["robobox_batrobot_drive_backward"] = function () {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_4`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_5`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_6`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_7`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_8`, `pinMode(3, OUTPUT);`);
+  generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
+  generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
+  generator.addSetup(`pinmode_6`, `pinMode(6, OUTPUT);`);
+  generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
+  generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
   const code = `
   analogWrite(6, 255);
@@ -217,11 +217,11 @@ generator.forBlock["robobox_batrobot_drive_backward"] = function () {
 
 generator.forBlock["robobox_batrobot_turn_right"] = function () {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_4`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_5`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_6`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_7`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_8`, `pinMode(3, OUTPUT);`);
+  generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
+  generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
+  generator.addSetup(`pinmode_6`, `pinMode(6, OUTPUT);`);
+  generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
+  generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
   const code = `
   analogWrite(6, 255);
@@ -235,11 +235,11 @@ generator.forBlock["robobox_batrobot_turn_right"] = function () {
 
 generator.forBlock["robobox_batrobot_turn_left"] = function () {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_4`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_5`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_6`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_7`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_8`, `pinMode(3, OUTPUT);`);
+  generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
+  generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
+  generator.addSetup(`pinmode_6`, `pinMode(6, OUTPUT);`);
+  generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
+  generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
   const code = `
   analogWrite(6, 255);
