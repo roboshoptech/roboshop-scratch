@@ -1239,25 +1239,25 @@ function ${_.FUNCTION_NAME_PLACEHOLDER_}(haystack, needle, replacement) {
     if (${I}>255) { ${I}=255; }
     delay(20);
     return ${I};
-}`,z=_.provideFunction_("robobox_sensor_distance",k);return _.addFunction(z,k),[`${z}(${r}, ${a})`,Do.NONE]};Tt.forBlock.robobox_batrobot_drive_forward=function(){return Tt.addSetup("pinmode_3","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_4","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_5","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_6","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_7","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_8","pinMode(3, OUTPUT);"),`
+}`,z=_.provideFunction_("robobox_sensor_distance",k);return _.addFunction(z,k),[`${z}(${r}, ${a})`,Do.NONE]};Tt.forBlock.robobox_batrobot_drive_forward=function(){return Tt.addSetup("pinmode_3","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_4","pinMode(4, OUTPUT);"),Tt.addSetup("pinmode_5","pinMode(5, OUTPUT);"),Tt.addSetup("pinmode_6","pinMode(6, OUTPUT);"),Tt.addSetup("pinmode_7","pinMode(7, OUTPUT);"),Tt.addSetup("pinmode_8","pinMode(8, OUTPUT);"),`
   analogWrite(6, 255);
   digitalWrite(7, LOW);
   digitalWrite(8, HIGH);
   analogWrite(5, 255);
   digitalWrite(4, LOW);
-  digitalWrite(3, HIGH);`};Tt.forBlock.robobox_batrobot_drive_backward=function(){return Tt.addSetup("pinmode_3","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_4","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_5","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_6","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_7","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_8","pinMode(3, OUTPUT);"),`
+  digitalWrite(3, HIGH);`};Tt.forBlock.robobox_batrobot_drive_backward=function(){return Tt.addSetup("pinmode_3","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_4","pinMode(4, OUTPUT);"),Tt.addSetup("pinmode_5","pinMode(5, OUTPUT);"),Tt.addSetup("pinmode_6","pinMode(6, OUTPUT);"),Tt.addSetup("pinmode_7","pinMode(7, OUTPUT);"),Tt.addSetup("pinmode_8","pinMode(8, OUTPUT);"),`
   analogWrite(6, 255);
   digitalWrite(7, HIGH);
   digitalWrite(8, LOW);
   analogWrite(5, 255);
   digitalWrite(4, HIGH);
-  digitalWrite(3, LOW);`};Tt.forBlock.robobox_batrobot_turn_right=function(){return Tt.addSetup("pinmode_3","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_4","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_5","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_6","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_7","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_8","pinMode(3, OUTPUT);"),`
+  digitalWrite(3, LOW);`};Tt.forBlock.robobox_batrobot_turn_right=function(){return Tt.addSetup("pinmode_3","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_4","pinMode(4, OUTPUT);"),Tt.addSetup("pinmode_5","pinMode(5, OUTPUT);"),Tt.addSetup("pinmode_6","pinMode(6, OUTPUT);"),Tt.addSetup("pinmode_7","pinMode(7, OUTPUT);"),Tt.addSetup("pinmode_8","pinMode(8, OUTPUT);"),`
   analogWrite(6, 255);
   digitalWrite(7, HIGH);
   digitalWrite(8, LOW);
   analogWrite(5, 255);
   digitalWrite(4, LOW);
-  digitalWrite(3, HIGH);`};Tt.forBlock.robobox_batrobot_turn_left=function(){return Tt.addSetup("pinmode_3","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_4","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_5","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_6","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_7","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_8","pinMode(3, OUTPUT);"),`
+  digitalWrite(3, HIGH);`};Tt.forBlock.robobox_batrobot_turn_left=function(){return Tt.addSetup("pinmode_3","pinMode(3, OUTPUT);"),Tt.addSetup("pinmode_4","pinMode(4, OUTPUT);"),Tt.addSetup("pinmode_5","pinMode(5, OUTPUT);"),Tt.addSetup("pinmode_6","pinMode(6, OUTPUT);"),Tt.addSetup("pinmode_7","pinMode(7, OUTPUT);"),Tt.addSetup("pinmode_8","pinMode(8, OUTPUT);"),`
   analogWrite(6, 255);
   digitalWrite(7, LOW);
   digitalWrite(8, HIGH);
