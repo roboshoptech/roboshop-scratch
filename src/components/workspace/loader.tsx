@@ -342,7 +342,7 @@ function WorkspaceCodePreview({
   return (
     <>
       {cloneElement(children, { onClick: handleClick })}
-      <Dialog open={open} onClose={toggleOpen}>
+      <Dialog open={open} onClose={() => open && toggleOpen()}>
         <Grid
           backgroundColor="white"
           maxWidth="var(--sp-md)"
@@ -365,7 +365,7 @@ function WorkspaceCodePreview({
               <MdClose size={24} />
             </button>
           </Flex>
-          <Box padding="var(--sp-2)">
+          <Box padding="var(--sp-2)" maxHeight="75vh" overflow="auto">
             <pre>{code}</pre>
           </Box>
         </Grid>
