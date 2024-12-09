@@ -257,9 +257,14 @@ export function WorkspaceLoader({ workspace }: Props) {
               <Box key={project.id}>
                 &mdash;
                 {project.id == currentProject?.id ? (
-                  <span className={button({ kind: "soft" })}>
+                  <Box
+                    as="span"
+                    display="inline-block"
+                    height="40px"
+                    className={button({ kind: "soft" })}
+                  >
                     {currentProject.name}
-                  </span>
+                  </Box>
                 ) : (
                   <button
                     className={button({ kind: "text" })}
