@@ -8,7 +8,6 @@ import {
   MdDelete,
 } from "react-icons/md";
 import { FaCode, FaDownload, FaSave } from "react-icons/fa";
-import { javascriptGenerator } from "blockly/javascript";
 
 import { button } from "../common/button";
 import { ToggleView } from "../common/toggle-view";

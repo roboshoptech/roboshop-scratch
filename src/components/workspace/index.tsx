@@ -11,7 +11,7 @@ import { WorkspaceLoader } from "./loader";
 export function ScratchWorkspace() {
   // const [openCreateVariableDialog, toggleCreateVariableDialog] = useToggle();
   const blocklyRef = useRef(null);
-  const { workspace, xml } = useBlocklyWorkspace({
+  const { workspace } = useBlocklyWorkspace({
     ref: blocklyRef,
     toolboxConfiguration: TOOLBOX_CONFIG,
     workspaceConfiguration: {

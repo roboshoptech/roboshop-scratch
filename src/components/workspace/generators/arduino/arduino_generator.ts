@@ -199,7 +199,7 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
     // objetcs definition
     const objects = Object.values(this.objects_);
     // functions definition
-    const functions = Object.values(this.functions_);
+    // const functions = Object.values(this.functions_);
     // setup
     const setups = Object.values(this.setups_);
     // user defined setup

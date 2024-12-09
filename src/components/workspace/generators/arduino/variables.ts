@@ -1,4 +1,4 @@
-import { Block, Variables } from "blockly";
+import { Block } from "blockly";
 import type { ArduinoGenerator } from "./arduino_generator";
 import { Order } from "./arduino_generator";
 

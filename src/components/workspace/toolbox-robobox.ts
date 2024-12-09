@@ -1,5 +1,5 @@
 import { defineBlocksWithJsonArray } from "blockly";
-import { javascriptGenerator, Order } from "blockly/javascript";
+import { Order } from "blockly/javascript";
 import { arduinoGenerator } from "./generators/arduino";
 
 const generator = arduinoGenerator;

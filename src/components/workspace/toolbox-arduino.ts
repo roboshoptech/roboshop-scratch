@@ -1,4 +1,4 @@
-import { javascriptGenerator, Order } from "blockly/javascript";
+import { Order } from "blockly/javascript";
 import { defineBlocksWithJsonArray } from "blockly";
 import { arduinoGenerator } from "./generators/arduino";
 
@@ -453,7 +453,7 @@ generator.forBlock["arduino_analog_write"] = function (block, generator) {
   return code;
 };
 
-generator.forBlock["arduino_logic_state"] = function (block, generator) {
+generator.forBlock["arduino_logic_state"] = function (block) {
   const dropdown_name = block.getFieldValue("NAME");
 
   // TODO: Assemble javascript into the code variable.
