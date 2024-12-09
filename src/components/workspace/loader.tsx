@@ -1,5 +1,5 @@
 import { serialization, WorkspaceSvg } from "blockly";
-import { useEffect, useState } from "react";
+import { cloneElement, ReactElement, useEffect, useState } from "react";
 import {
   MdAdd,
   MdCheck,
@@ -7,16 +7,19 @@ import {
   MdContentCopy,
   MdDelete,
 } from "react-icons/md";
-import { FaDownload, FaSave } from "react-icons/fa";
+import { FaCode, FaDownload, FaSave } from "react-icons/fa";
 import { javascriptGenerator } from "blockly/javascript";
 
-import styles from "./loader.module.css";
 import { button } from "../common/button";
 import { ToggleView } from "../common/toggle-view";
 import { APP_PROJECT } from "../../utils/constants";
 import { Box, Flex, Grid } from "../common/box";
 import { spinner } from "../common/spinner";
 import { arduinoGenerator } from "./generators/arduino";
+import { useToggle } from "../../utils/use-toggle";
+import { Dialog } from "../common/modal-dialog";
+
+import styles from "./loader.module.css";
 
 type Props = {
   workspace: WorkspaceSvg;
@@ -30,7 +33,6 @@ type ProjectData = {
 const generator = arduinoGenerator;
 
 export function WorkspaceLoader({ workspace }: Props) {
-  // const [title, setTitle] = useState("");
   const [currentProject, setCurrentProject] = useState<ProjectData | null>(
     null
   );
@@ -173,6 +175,12 @@ export function WorkspaceLoader({ workspace }: Props) {
           )}
         </ToggleView>
 
+        <WorkspaceCodePreview title={currentProject.name} workspace={workspace}>
+          <button className={button({ kind: "bold" })} title="Preview code">
+            <FaCode size={16} />
+          </button>
+        </WorkspaceCodePreview>
+
         <button
           className={button({ kind: "bold" })}
           title="Download code"
@@ -303,6 +311,66 @@ export function WorkspaceLoader({ workspace }: Props) {
 
       {previousProjectLoadout}
     </div>
+  );
+}
+
+function WorkspaceCodePreview({
+  title,
+  workspace,
+  children,
+}: {
+  title: string;
+  workspace: WorkspaceSvg;
+  children: ReactElement;
+}) {
+  const [code, setCode] = useState("");
+  const [open, toggleOpen] = useToggle();
+
+  function handleClick() {
+    try {
+      // const code = javascriptGenerator.workspaceToCode(workspace)
+
+      const code = generator.workspaceToCode(workspace);
+      setCode(code);
+      toggleOpen();
+    } catch (err: any) {
+      alert(err.toString());
+      console.log((err as Error).stack?.toString());
+    }
+  }
+
+  return (
+    <>
+      {cloneElement(children, { onClick: handleClick })}
+      <Dialog open={open} onClose={toggleOpen}>
+        <Grid
+          backgroundColor="white"
+          maxWidth="var(--sp-md)"
+          marginInline="auto"
+          borderRadius="var(--sp-1)"
+          border="1px solid var(--c-con-2)"
+        >
+          <Flex
+            justifyContent="space-between"
+            backgroundColor="var(--c-con-1)"
+            padding="var(--sp-2)"
+          >
+            <Box as="span" fontWeight="bold">
+              {title}
+            </Box>
+            <button
+              className={button({ kind: "soft", size: "small" })}
+              onClick={toggleOpen}
+            >
+              <MdClose size={24} />
+            </button>
+          </Flex>
+          <Box padding="var(--sp-2)">
+            <pre>{code}</pre>
+          </Box>
+        </Grid>
+      </Dialog>
+    </>
   );
 }
 
