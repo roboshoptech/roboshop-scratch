@@ -358,15 +358,10 @@ generator.forBlock["arduino_setup_loop"] = function (block, generator) {
   const statement_setup_code = generator.statementToCode(block, "SETUP_CODE");
   const statement_loop_code = generator.statementToCode(block, "LOOP_CODE");
 
-  const code = `\
-void setup() {
-    ${statement_setup_code}
-}
+  generator.addUserSetup("main_setup", statement_setup_code);
+  generator.addLoop("main_loop", statement_loop_code);
 
-void loop() {
-    ${statement_loop_code}
-}`;
-
+  const code = "";
   return code;
 };
 
@@ -412,10 +407,15 @@ generator.forBlock["arduino_analog_read"] = function (block, generator) {
 
 generator.forBlock["arduino_digital_read"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
-  const value_name = generator.valueToCode(block, "PIN", Order.ATOMIC);
+  const value_pin = generator.valueToCode(block, "PIN", Order.ATOMIC);
 
-  // TODO: Assemble javascript into the code variable.
-  const code = `digitalRead(${value_name})`;
+  if (isPin(value_pin)) {
+    generator.addUserSetup(
+      `pinmode_${value_pin}`,
+      `pinMode(${value_pin}, INPUT);`
+    );
+  }
+  const code = `digitalRead(${value_pin})`;
 
   // TODO: Change Order.NONE to the correct operator precedence strength
   return [code, Order.NONE];
@@ -425,7 +425,7 @@ generator.forBlock["arduino_digital_write"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_pin = generator.valueToCode(block, "PIN", Order.ATOMIC);
   const value_state = generator.valueToCode(block, "STATE", Order.ATOMIC);
-  console.log("arduino_digital_write", value_pin);
+  // console.log("arduino_digital_write", value_pin);
 
   if (isPin(value_pin)) {
     generator.addUserSetup(
@@ -443,9 +443,13 @@ generator.forBlock["arduino_analog_write"] = function (block, generator) {
   const value_pin = generator.valueToCode(block, "PIN", Order.ATOMIC);
   const value_state = generator.valueToCode(block, "STATE", Order.ATOMIC);
 
-  // TODO: Assemble javascript into the code variable.
-  const code = `analogWrite(${value_pin}, ${value_state});
-`;
+  if (isPin(value_pin)) {
+    generator.addUserSetup(
+      `pinmode_${value_pin}`,
+      `pinMode(${value_pin}, OUTPUT);`
+    );
+  }
+  const code = `analogWrite(${value_pin}, ${value_state});\n`;
   return code;
 };
 
