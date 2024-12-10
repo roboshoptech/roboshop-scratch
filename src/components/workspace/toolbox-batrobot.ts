@@ -164,7 +164,7 @@ generator.forBlock["robobox_sensor_ultrasonic_distance"] = function (
   const fnCode = `\
 int robobox_sensor_distance(byte trig_pin, byte dist_pin) {
     digitalWrite(trig_pin,HIGH);
-    delayMicroseconds(1000);
+    delayMicroseconds(10);
     digitalWrite(trig_pin,LOW);
     int ${varName} = (pulseIn(dist_pin,HIGH)/2)/29.1+2;
     if (${varName}>255) { ${varName}=255; }
