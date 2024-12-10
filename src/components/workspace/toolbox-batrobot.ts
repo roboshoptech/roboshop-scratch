@@ -6,40 +6,40 @@ const generator = arduinoGenerator;
 
 export const ROBOBOX_TOOLBOX_CONFIG = {
   kind: "category",
-  name: "Robobox",
+  name: "BatRobot",
   colour: "190",
   contents: [
     {
       kind: "category",
-      name: "Sensors",
+      name: "Input",
       colour: "190",
       contents: [
         {
           kind: "block",
-          type: "robobox_sensor_ultrasonic_distance",
+          type: "batrobot_input_ultrasonic_distance",
         },
       ],
     },
     {
       kind: "category",
-      name: "Batrobot",
+      name: "Output",
       colour: "190",
       contents: [
         {
           kind: "block",
-          type: "robobox_batrobot_drive_forward",
+          type: "batrobot_output_drive_forward",
         },
         {
           kind: "block",
-          type: "robobox_batrobot_drive_backward",
+          type: "batrobot_output_drive_backward",
         },
         {
           kind: "block",
-          type: "robobox_batrobot_turn_right",
+          type: "batrobot_output_turn_right",
         },
         {
           kind: "block",
-          type: "robobox_batrobot_turn_left",
+          type: "batrobot_output_turn_left",
         },
       ],
     },
@@ -48,10 +48,10 @@ export const ROBOBOX_TOOLBOX_CONFIG = {
 
 defineBlocksWithJsonArray([
   {
-    type: "robobox_sensor_ultrasonic_distance",
+    type: "batrobot_input_ultrasonic_distance",
     tooltip: "",
     helpUrl: "",
-    message0: "Distance (cm) %1 %2 %3 Trigger on pin: %4 Listen on pin: %5",
+    message0: "Distance (cm) %1 %2 %3",
     args0: [
       {
         type: "input_dummy",
@@ -67,22 +67,14 @@ defineBlocksWithJsonArray([
       },
       {
         type: "input_dummy",
-        name: "NAME",
-      },
-      {
-        type: "input_value",
-        name: "TRIGGER_PIN",
-      },
-      {
-        type: "input_value",
-        name: "LISTEN_PIN",
+        name: "NAME2",
       },
     ],
     output: null,
     colour: 190,
   },
   {
-    type: "robobox_batrobot_drive_forward",
+    type: "batrobot_output_drive_forward",
     tooltip: "",
     helpUrl: "",
     message0: "drive forward %1",
@@ -97,7 +89,7 @@ defineBlocksWithJsonArray([
     colour: 190,
   },
   {
-    type: "robobox_batrobot_drive_backward",
+    type: "batrobot_output_drive_backward",
     tooltip: "",
     helpUrl: "",
     message0: "drive backward %1",
@@ -112,7 +104,7 @@ defineBlocksWithJsonArray([
     colour: 190,
   },
   {
-    type: "robobox_batrobot_turn_right",
+    type: "batrobot_output_turn_right",
     tooltip: "",
     helpUrl: "",
     message0: "turn right %1",
@@ -127,7 +119,7 @@ defineBlocksWithJsonArray([
     colour: 190,
   },
   {
-    type: "robobox_batrobot_turn_left",
+    type: "batrobot_output_turn_left",
     tooltip: "",
     helpUrl: "",
     message0: "turn left %1",
@@ -143,43 +135,32 @@ defineBlocksWithJsonArray([
   },
 ]);
 
-generator.forBlock["robobox_sensor_ultrasonic_distance"] = function (
+generator.forBlock["batrobot_input_ultrasonic_distance"] = function (
   block,
   generator
 ) {
-  // TODO: change Order.ATOMIC to the correct operator precedence strength
-  const value_trigger_pin = generator.valueToCode(
-    block,
-    "TRIGGER_PIN",
-    Order.ATOMIC
-  );
+  generator.addSetup(`pinmode_a0`, `pinMode(A0, OUTPUT);`);
+  generator.addSetup(`pinmode_a1`, `pinMode(A1, INPUT);`);
 
-  // TODO: change Order.ATOMIC to the correct operator precedence strength
-  const value_listen_pin = generator.valueToCode(
-    block,
-    "LISTEN_PIN",
-    Order.ATOMIC
-  );
   const varName = generator.getVariableName("value");
   const fnCode = `\
-int robobox_sensor_distance(byte trig_pin, byte dist_pin) {
-    digitalWrite(trig_pin,HIGH);
+int batrobot_sensor_distance(byte trig_pin, byte dist_pin) {
+    digitalWrite(trig_pin, HIGH);
     delayMicroseconds(10);
-    digitalWrite(trig_pin,LOW);
-    int ${varName} = (pulseIn(dist_pin,HIGH)/2)/29.1+2;
+    digitalWrite(trig_pin, LOW);
+    int ${varName} = (pulseIn(dist_pin, HIGH) / 2) / 29.1 + 2;
     if (${varName}>255) { ${varName}=255; }
     delay(20);
     return ${varName};
 }`;
-  const fnName = generator.provideFunction_("robobox_sensor_distance", fnCode);
+  const fnName = generator.provideFunction_("batrobot_sensor_distance", fnCode);
   generator.addFunction(fnName, fnCode);
-  // TODO: Assemble javascript into the code variable.
-  const code = `${fnName}(${value_trigger_pin}, ${value_listen_pin})`;
-  // TODO: Change Order.NONE to the correct operator precedence strength
+
+  const code = `${fnName}(A0, A1)`;
   return [code, Order.NONE];
 };
 
-generator.forBlock["robobox_batrobot_drive_forward"] = function () {
+generator.forBlock["batrobot_output_drive_forward"] = function () {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
   generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
   generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
@@ -187,17 +168,17 @@ generator.forBlock["robobox_batrobot_drive_forward"] = function () {
   generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
   generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
-  const code = `
+  const code = `\
   analogWrite(6, 255);
   digitalWrite(7, LOW);
   digitalWrite(8, HIGH);
   analogWrite(5, 255);
   digitalWrite(4, LOW);
-  digitalWrite(3, HIGH);`;
+  digitalWrite(3, HIGH);\n`;
   return code;
 };
 
-generator.forBlock["robobox_batrobot_drive_backward"] = function () {
+generator.forBlock["batrobot_output_drive_backward"] = function () {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
   generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
   generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
@@ -205,17 +186,17 @@ generator.forBlock["robobox_batrobot_drive_backward"] = function () {
   generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
   generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
-  const code = `
+  const code = `\
   analogWrite(6, 255);
   digitalWrite(7, HIGH);
   digitalWrite(8, LOW);
   analogWrite(5, 255);
   digitalWrite(4, HIGH);
-  digitalWrite(3, LOW);`;
+  digitalWrite(3, LOW);\n`;
   return code;
 };
 
-generator.forBlock["robobox_batrobot_turn_right"] = function () {
+generator.forBlock["batrobot_output_turn_right"] = function () {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
   generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
   generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
@@ -223,17 +204,17 @@ generator.forBlock["robobox_batrobot_turn_right"] = function () {
   generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
   generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
-  const code = `
+  const code = `\
   analogWrite(6, 255);
   digitalWrite(7, HIGH);
   digitalWrite(8, LOW);
   analogWrite(5, 255);
   digitalWrite(4, LOW);
-  digitalWrite(3, HIGH);`;
+  digitalWrite(3, HIGH);\n`;
   return code;
 };
 
-generator.forBlock["robobox_batrobot_turn_left"] = function () {
+generator.forBlock["batrobot_output_turn_left"] = function () {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
   generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
   generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
@@ -241,12 +222,12 @@ generator.forBlock["robobox_batrobot_turn_left"] = function () {
   generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
   generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
-  const code = `
+  const code = `\
   analogWrite(6, 255);
   digitalWrite(7, LOW);
   digitalWrite(8, HIGH);
   analogWrite(5, 255);
   digitalWrite(4, HIGH);
-  digitalWrite(3, LOW);`;
+  digitalWrite(3, LOW);\n`;
   return code;
 };

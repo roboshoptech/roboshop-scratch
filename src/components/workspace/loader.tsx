@@ -30,7 +30,7 @@ type ProjectData = {
 };
 
 const generator = arduinoGenerator;
-
+const UNTITLED = "Untitled";
 export function WorkspaceLoader({ workspace }: Props) {
   const [currentProject, setCurrentProject] = useState<ProjectData | null>(
     null
@@ -57,10 +57,7 @@ export function WorkspaceLoader({ workspace }: Props) {
         {(open, toggleOpen) =>
           !open ? (
             <div>
-              <button
-                className={button({ kind: "text", size: "small" })}
-                onClick={toggleOpen}
-              >
+              <button className={button({ kind: "line" })} onClick={toggleOpen}>
                 Save as new
               </button>
             </div>
@@ -111,7 +108,7 @@ export function WorkspaceLoader({ workspace }: Props) {
 
   const saveCurrentProject =
     currentProject == null ? null : (
-      <Flex gap="var(--sp-2)">
+      <>
         <ToggleView>
           {(loading, setLoading) => (
             <button
@@ -174,30 +171,6 @@ export function WorkspaceLoader({ workspace }: Props) {
           )}
         </ToggleView>
 
-        <WorkspaceCodePreview title={currentProject.name} workspace={workspace}>
-          <button className={button({ kind: "bold" })} title="Preview code">
-            <FaCode size={16} />
-          </button>
-        </WorkspaceCodePreview>
-
-        <button
-          className={button({ kind: "bold" })}
-          title="Download code"
-          onClick={() => {
-            try {
-              // const code = javascriptGenerator.workspaceToCode(workspace)
-
-              const code = generator.workspaceToCode(workspace);
-              downloadFile(code, `${currentProject.name}.ino`, "text/plain");
-            } catch (err: any) {
-              alert(err.toString());
-              console.log((err as Error).stack?.toString());
-            }
-          }}
-        >
-          <FaDownload size={16} />
-        </button>
-
         <ToggleView>
           {(loading, setLoading) => (
             <button
@@ -223,8 +196,43 @@ export function WorkspaceLoader({ workspace }: Props) {
             </button>
           )}
         </ToggleView>
-      </Flex>
+      </>
     );
+
+  const viewCode = (
+    <>
+      <WorkspaceCodePreview
+        title={currentProject?.name ?? UNTITLED}
+        workspace={workspace}
+      >
+        <button className={button({ kind: "bold" })} title="Preview code">
+          <FaCode size={16} />
+        </button>
+      </WorkspaceCodePreview>
+
+      <button
+        className={button({ kind: "bold" })}
+        title="Download code"
+        onClick={() => {
+          try {
+            // const code = javascriptGenerator.workspaceToCode(workspace)
+
+            const code = generator.workspaceToCode(workspace);
+            downloadFile(
+              code,
+              `${currentProject?.name ?? UNTITLED}.ino`,
+              "text/plain"
+            );
+          } catch (err: any) {
+            alert(err.toString());
+            console.log((err as Error).stack?.toString());
+          }
+        }}
+      >
+        <FaDownload size={16} />
+      </button>
+    </>
+  );
 
   const previousProjectLoadout = (
     <ToggleView>
@@ -305,11 +313,13 @@ export function WorkspaceLoader({ workspace }: Props) {
   return (
     <div className={styles["main"]}>
       <span className={styles["project-title"]}>
-        {currentProject?.name || "Untitled"}
+        {currentProject?.name || UNTITLED}
       </span>
-      {saveAsNew}
-
-      {saveCurrentProject}
+      <Flex gap="var(--sp-2)">
+        {saveAsNew}
+        {saveCurrentProject}
+        {viewCode}
+      </Flex>
 
       <hr />
 
