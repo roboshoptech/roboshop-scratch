@@ -2,7 +2,7 @@ import { defineBlocksWithJsonArray, Msg } from "blockly";
 import { lists, loops, math, texts } from "blockly/blocks";
 import { Order } from "blockly/javascript";
 import { ARDUINO_TOOLBOX_CONFIG } from "./toolbox-arduino";
-import { ROBOBOX_TOOLBOX_CONFIG } from "./toolbox-batrobot";
+import { BATROBOT_TOOLBOX_CONFIG } from "./toolbox-batrobot";
 import { arduinoGenerator } from "./generators/arduino";
 
 const generator = arduinoGenerator;
@@ -151,7 +151,7 @@ export const TOOLBOX_CONFIG = {
       colour: Msg.PROCEDURES_HUE,
     },
     ARDUINO_TOOLBOX_CONFIG,
-    ROBOBOX_TOOLBOX_CONFIG,
+    BATROBOT_TOOLBOX_CONFIG,
   ],
 };
 

@@ -4,7 +4,7 @@ import { arduinoGenerator } from "./generators/arduino";
 
 const generator = arduinoGenerator;
 
-export const ROBOBOX_TOOLBOX_CONFIG = {
+export const BATROBOT_TOOLBOX_CONFIG = {
   kind: "category",
   name: "BatRobot",
   colour: "190",
@@ -28,18 +28,58 @@ export const ROBOBOX_TOOLBOX_CONFIG = {
         {
           kind: "block",
           type: "batrobot_output_drive_forward",
+          inputs: {
+            SPEED: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 64,
+                },
+              },
+            },
+          },
         },
         {
           kind: "block",
           type: "batrobot_output_drive_backward",
+          inputs: {
+            SPEED: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 64,
+                },
+              },
+            },
+          },
         },
         {
           kind: "block",
           type: "batrobot_output_turn_right",
+          inputs: {
+            SPEED: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 64,
+                },
+              },
+            },
+          },
         },
         {
           kind: "block",
           type: "batrobot_output_turn_left",
+          inputs: {
+            SPEED: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 64,
+                },
+              },
+            },
+          },
         },
       ],
     },
@@ -77,11 +117,12 @@ defineBlocksWithJsonArray([
     type: "batrobot_output_drive_forward",
     tooltip: "",
     helpUrl: "",
-    message0: "drive forward %1",
+    message0: "drive forward at speed %1",
     args0: [
       {
-        type: "input_dummy",
-        name: "NAME",
+        type: "input_value",
+        name: "SPEED",
+        check: "Number",
       },
     ],
     previousStatement: null,
@@ -92,11 +133,12 @@ defineBlocksWithJsonArray([
     type: "batrobot_output_drive_backward",
     tooltip: "",
     helpUrl: "",
-    message0: "drive backward %1",
+    message0: "drive backward at speed %1",
     args0: [
       {
-        type: "input_dummy",
-        name: "NAME",
+        type: "input_value",
+        name: "SPEED",
+        check: "Number",
       },
     ],
     previousStatement: null,
@@ -107,11 +149,12 @@ defineBlocksWithJsonArray([
     type: "batrobot_output_turn_right",
     tooltip: "",
     helpUrl: "",
-    message0: "turn right %1",
+    message0: "turn right at speed %1",
     args0: [
       {
-        type: "input_dummy",
-        name: "NAME",
+        type: "input_value",
+        name: "SPEED",
+        check: "Number",
       },
     ],
     previousStatement: null,
@@ -122,11 +165,12 @@ defineBlocksWithJsonArray([
     type: "batrobot_output_turn_left",
     tooltip: "",
     helpUrl: "",
-    message0: "turn left %1",
+    message0: "turn left at speed %1",
     args0: [
       {
-        type: "input_dummy",
-        name: "NAME",
+        type: "input_value",
+        name: "SPEED",
+        check: "Number",
       },
     ],
     previousStatement: null,
@@ -160,7 +204,10 @@ int batrobot_sensor_distance(byte trig_pin, byte dist_pin) {
   return [code, Order.NONE];
 };
 
-generator.forBlock["batrobot_output_drive_forward"] = function () {
+generator.forBlock["batrobot_output_drive_forward"] = function (
+  block,
+  generator
+) {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
   generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
   generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
@@ -168,17 +215,22 @@ generator.forBlock["batrobot_output_drive_forward"] = function () {
   generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
   generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
+  const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
+
   const code = `\
-  analogWrite(6, 255);
+  analogWrite(6, ${value_speed});
   digitalWrite(7, LOW);
   digitalWrite(8, HIGH);
-  analogWrite(5, 255);
+  analogWrite(5, ${value_speed});
   digitalWrite(4, LOW);
   digitalWrite(3, HIGH);\n`;
   return code;
 };
 
-generator.forBlock["batrobot_output_drive_backward"] = function () {
+generator.forBlock["batrobot_output_drive_backward"] = function (
+  block,
+  generator
+) {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
   generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
   generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
@@ -186,17 +238,19 @@ generator.forBlock["batrobot_output_drive_backward"] = function () {
   generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
   generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
+  const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
+
   const code = `\
-  analogWrite(6, 255);
+  analogWrite(6, ${value_speed});
   digitalWrite(7, HIGH);
   digitalWrite(8, LOW);
-  analogWrite(5, 255);
+  analogWrite(5, ${value_speed});
   digitalWrite(4, HIGH);
   digitalWrite(3, LOW);\n`;
   return code;
 };
 
-generator.forBlock["batrobot_output_turn_right"] = function () {
+generator.forBlock["batrobot_output_turn_right"] = function (block, generator) {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
   generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
   generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
@@ -204,17 +258,19 @@ generator.forBlock["batrobot_output_turn_right"] = function () {
   generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
   generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
+  const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
+
   const code = `\
-  analogWrite(6, 255);
+  analogWrite(6, ${value_speed});
   digitalWrite(7, HIGH);
   digitalWrite(8, LOW);
-  analogWrite(5, 255);
+  analogWrite(5, ${value_speed});
   digitalWrite(4, LOW);
   digitalWrite(3, HIGH);\n`;
   return code;
 };
 
-generator.forBlock["batrobot_output_turn_left"] = function () {
+generator.forBlock["batrobot_output_turn_left"] = function (block, generator) {
   generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
   generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
   generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
@@ -222,11 +278,13 @@ generator.forBlock["batrobot_output_turn_left"] = function () {
   generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
   generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
 
+  const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
+
   const code = `\
-  analogWrite(6, 255);
+  analogWrite(6, ${value_speed});
   digitalWrite(7, LOW);
   digitalWrite(8, HIGH);
-  analogWrite(5, 255);
+  analogWrite(5, ${value_speed});
   digitalWrite(4, HIGH);
   digitalWrite(3, LOW);\n`;
   return code;
