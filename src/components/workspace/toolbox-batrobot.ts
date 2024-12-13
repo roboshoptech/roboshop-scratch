@@ -18,6 +18,10 @@ export const BATROBOT_TOOLBOX_CONFIG = {
           kind: "block",
           type: "batrobot_input_ultrasonic_distance",
         },
+        {
+          kind: "block",
+          type: "batrobot_input_read_light_sensor",
+        },
       ],
     },
     {
@@ -140,9 +144,37 @@ defineBlocksWithJsonArray([
       {
         type: "input_dummy",
         name: "NAME2",
+        align: "CENTRE",
       },
     ],
     output: null,
+    colour: 190,
+  },
+  {
+    type: "batrobot_input_read_light_sensor",
+    tooltip: "",
+    helpUrl: "",
+    message0: "read light sensor %1 %2 %3",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "SENSOR",
+      },
+      {
+        type: "field_image",
+        src: "https://www.circuitbasics.com/wp-content/uploads/2020/06/Photoresistor-Electrodes-and-Resistive-Material-300x186.jpg",
+        width: 64,
+        height: 40,
+        alt: "*",
+        flipRtl: "FALSE",
+      },
+      {
+        type: "input_dummy",
+        name: "NAME",
+        align: "CENTRE",
+      },
+    ],
+    output: "Number",
     colour: 190,
   },
   {
@@ -408,4 +440,15 @@ generator.forBlock["batrobot_output_set_led"] = function (block, generator) {
   analogWrite(10, ${value_green});
   analogWrite(9, ${value_blue});\n`;
   return code;
+};
+
+generator.forBlock["batrobot_input_read_light_sensor"] = function (
+  block,
+  generator
+) {
+  generator.addSetup(`pinmode_A2`, `pinMode(A2, INPUT);`);
+
+  const code = "analogRead(A2)";
+  // TODO: Change Order.NONE to the correct operator precedence strength
+  return [code, Order.ATOMIC];
 };
