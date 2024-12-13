@@ -13,6 +13,7 @@ export const BATROBOT_TOOLBOX_CONFIG = {
   kind: "category",
   name: "BatRobot",
   colour: "190",
+  expanded: "true",
   contents: [
     {
       kind: "category",

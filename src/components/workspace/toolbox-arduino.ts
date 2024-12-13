@@ -12,6 +12,7 @@ export const ARDUINO_TOOLBOX_CONFIG = {
   kind: "category",
   name: "Arduino",
   colour: "180",
+  expanded: "true",
   contents: [
     {
       kind: "category",

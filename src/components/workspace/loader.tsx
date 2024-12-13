@@ -7,7 +7,7 @@ import {
   MdContentCopy,
   MdDelete,
 } from "react-icons/md";
-import { FaCode, FaDownload, FaSave } from "react-icons/fa";
+import { FaCode, FaCopy, FaDownload, FaSave } from "react-icons/fa";
 
 import { button } from "../common/button";
 import { ToggleView } from "../common/toggle-view";
@@ -339,6 +339,7 @@ function WorkspaceCodePreview({
 }) {
   const [code, setCode] = useState("");
   const [open, toggleOpen] = useToggle();
+  const [copied, setCopied] = useState<any | null>(null);
 
   function handleClick() {
     try {
@@ -351,6 +352,21 @@ function WorkspaceCodePreview({
       alert(err.toString());
       console.log((err as Error).stack?.toString());
     }
+  }
+
+  function handleCopyCode() {
+    if (typeof window.navigator == "undefined") return;
+    if (typeof window.navigator.clipboard == "undefined") return;
+    navigator.clipboard.writeText(code);
+
+    if (copied) {
+      clearTimeout(copied);
+    }
+    setCopied(
+      setTimeout(() => {
+        setCopied(null);
+      }, 2000)
+    );
   }
 
   return (
@@ -369,9 +385,19 @@ function WorkspaceCodePreview({
             backgroundColor="var(--c-con-1)"
             padding="var(--sp-2)"
           >
-            <Box as="span" fontWeight="bold">
-              {title}
-            </Box>
+            <Flex gap="var(--sp-4)">
+              <Box as="span" fontWeight="bold">
+                {title}
+              </Box>
+              <button
+                className={button({ kind: "bold", size: "small" })}
+                onClick={handleCopyCode}
+                title="Copy code"
+              >
+                <FaCopy size={18} />
+              </button>
+              {copied != null && <span>Copied!</span>}
+            </Flex>
             <button
               className={button({ kind: "soft", size: "small" })}
               onClick={toggleOpen}
