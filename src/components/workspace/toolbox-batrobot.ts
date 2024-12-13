@@ -35,6 +35,30 @@ export const BATROBOT_TOOLBOX_CONFIG = {
         },
         {
           kind: "block",
+          type: "batrobot_output_set_led",
+          inputs: {
+            RED: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 128 },
+              },
+            },
+            GREEN: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 128 },
+              },
+            },
+            BLUE: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 128 },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
           type: "batrobot_output_drive_forward",
           inputs: {
             SPEED: {
@@ -215,6 +239,34 @@ defineBlocksWithJsonArray([
     nextStatement: null,
     colour: 190,
   },
+  {
+    type: "batrobot_output_set_led",
+    tooltip: "",
+    helpUrl: "",
+    message0: "set LED, red %1 green %2 blue %3",
+    args0: [
+      {
+        type: "input_value",
+        name: "RED",
+        check: "Number",
+      },
+      {
+        type: "input_value",
+        name: "GREEN",
+        align: "RIGHT",
+        check: "Number",
+      },
+      {
+        type: "input_value",
+        name: "BLUE",
+        align: "RIGHT",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 190,
+  },
 ]);
 
 generator.forBlock["batrobot_input_ultrasonic_distance"] = function (
@@ -339,5 +391,21 @@ generator.forBlock["batrobot_output_stop_buzz"] = function (block, generator) {
   generator.addSetup(`pinmode_13`, `pinMode(13, OUTPUT);`);
 
   const code = "digitalWrite(13, LOW)";
+  return code;
+};
+
+generator.forBlock["batrobot_output_set_led"] = function (block, generator) {
+  generator.addSetup(`pinmode_9`, `pinMode(9, OUTPUT);`);
+  generator.addSetup(`pinmode_10`, `pinMode(10, OUTPUT);`);
+  generator.addSetup(`pinmode_11`, `pinMode(11, OUTPUT);`);
+
+  const value_red = generator.valueToCode(block, "RED", Order.ATOMIC);
+  const value_green = generator.valueToCode(block, "GREEN", Order.ATOMIC);
+  const value_blue = generator.valueToCode(block, "BLUE", Order.ATOMIC);
+
+  const code = `\
+  analogWrite(11, ${value_red});
+  analogWrite(10, ${value_green});
+  analogWrite(9, ${value_blue});\n`;
   return code;
 };
