@@ -27,6 +27,14 @@ export const BATROBOT_TOOLBOX_CONFIG = {
       contents: [
         {
           kind: "block",
+          type: "batrobot_output_start_buzz",
+        },
+        {
+          kind: "block",
+          type: "batrobot_output_stop_buzz",
+        },
+        {
+          kind: "block",
           type: "batrobot_output_drive_forward",
           inputs: {
             SPEED: {
@@ -177,6 +185,36 @@ defineBlocksWithJsonArray([
     nextStatement: null,
     colour: 190,
   },
+  {
+    type: "batrobot_output_start_buzz",
+    tooltip: "",
+    helpUrl: "",
+    message0: "start buzz %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 190,
+  },
+  {
+    type: "batrobot_output_stop_buzz",
+    tooltip: "",
+    helpUrl: "",
+    message0: "stop buzz %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 190,
+  },
 ]);
 
 generator.forBlock["batrobot_input_ultrasonic_distance"] = function (
@@ -287,5 +325,19 @@ generator.forBlock["batrobot_output_turn_left"] = function (block, generator) {
   analogWrite(5, ${value_speed});
   digitalWrite(4, HIGH);
   digitalWrite(3, LOW);\n`;
+  return code;
+};
+
+generator.forBlock["batrobot_output_start_buzz"] = function (block, generator) {
+  generator.addSetup(`pinmode_13`, `pinMode(13, OUTPUT);`);
+
+  const code = "digitalWrite(13, HIGH)";
+  return code;
+};
+
+generator.forBlock["batrobot_output_stop_buzz"] = function (block, generator) {
+  generator.addSetup(`pinmode_13`, `pinMode(13, OUTPUT);`);
+
+  const code = "digitalWrite(13, LOW)";
   return code;
 };
