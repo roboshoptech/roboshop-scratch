@@ -5,7 +5,7 @@ import styles from "./workspace.module.css";
 import { useRef } from "react";
 import { useBlocklyWorkspace } from "react-blockly";
 
-import { TOOLBOX_CONFIG } from "./toolbox";
+import { TOOLBOX_CONFIG, TOOLBOX_MAX_INSTANCES } from "./toolbox";
 import { WorkspaceLoader } from "./loader";
 
 export function ScratchWorkspace() {
@@ -17,6 +17,7 @@ export function ScratchWorkspace() {
     workspaceConfiguration: {
       grid: { spacing: 16 },
       zoom: { controls: true, wheel: true },
+      maxInstances: TOOLBOX_MAX_INSTANCES,
     },
     initialXml: "",
   });

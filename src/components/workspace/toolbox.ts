@@ -1,8 +1,14 @@
 import { defineBlocksWithJsonArray, Msg } from "blockly";
 import { lists, loops, math, texts } from "blockly/blocks";
 import { Order } from "blockly/javascript";
-import { ARDUINO_TOOLBOX_CONFIG } from "./toolbox-arduino";
-import { BATROBOT_TOOLBOX_CONFIG } from "./toolbox-batrobot";
+import {
+  ARDUINO_TOOLBOX_CONFIG,
+  ARDUINO_TOOLBOX_MAX_INSTANCES,
+} from "./toolbox-arduino";
+import {
+  BATROBOT_TOOLBOX_CONFIG,
+  BATROBOT_TOOLBOX_MAX_INSTANCES,
+} from "./toolbox-batrobot";
 import { arduinoGenerator } from "./generators/arduino";
 
 const generator = arduinoGenerator;
@@ -160,3 +166,8 @@ TOOLBOX_CONFIG.contents.forEach((cat, ix, arr) => {
     cat.colour = Math.floor((ix * 360) / arr.length).toString();
   }
 });
+
+export const TOOLBOX_MAX_INSTANCES = {
+  ...ARDUINO_TOOLBOX_MAX_INSTANCES,
+  ...BATROBOT_TOOLBOX_MAX_INSTANCES,
+};

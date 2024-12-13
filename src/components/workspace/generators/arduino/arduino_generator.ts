@@ -176,7 +176,12 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
 
     // Declare all of the variables.
     if (defvars.length) {
-      this.definitions_["variables"] = "int " + defvars.join(", ") + ";";
+      this.definitions_ = Object.fromEntries(
+        defvars.map((v) => [
+          v,
+          v.startsWith("volatile_") ? `volatile int ${v};` : `int ${v};`,
+        ])
+      );
     }
     this.isInitialized = true;
   }
@@ -199,7 +204,7 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
     // objetcs definition
     const objects = Object.values(this.objects_);
     // functions definition
-    // const functions = Object.values(this.functions_);
+    const functions = Object.values(this.functions_);
     // setup
     const setups = Object.values(this.setups_);
     // user defined setup
@@ -212,6 +217,12 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
     this.isInitialized = false;
 
     this.nameDB_!.reset();
+    // console.log("ArduinoGenerator", {
+    //   definitions,
+    //   variables,
+    //   setups,
+    //   userSetups,
+    // });
 
     const newcode =
       (macros.length > 0 ? `${macros.join("\n")}\n\n` : "") +
@@ -219,9 +230,9 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
       (definitions.length > 0 ? `${definitions.join("\n")}\n\n` : "") +
       (variables.length > 0 ? `${variables.join("\n")}\n\n` : "") +
       (objects.length > 0 ? `${objects.join("\n")}\n\n` : "") +
-      // (functions.length > 0 ? `${functions.join("\n")}\n\n` : "") +
-      `void setup() {\n${setups.join("\n")}\n${userSetups.join("\n")}\n}\n\n` +
-      `void loop() {\n${loops.join("\n") + code}\n}`;
+      (functions.length > 0 ? `${functions.join("\n")}\n\n` : "") +
+      `void setup() {\n${setups.join("\n")}\n${userSetups.join("\n")}}\n\n` +
+      `void loop() {\n${loops.join("\n") + code}}`;
     return newcode;
   }
 

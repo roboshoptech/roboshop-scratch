@@ -4,6 +4,11 @@ import { arduinoGenerator } from "./generators/arduino";
 
 const generator = arduinoGenerator;
 
+export const BATROBOT_TOOLBOX_MAX_INSTANCES = {
+  batrobot_input_button1_press: 1,
+  batrobot_input_button2_press: 1,
+};
+
 export const BATROBOT_TOOLBOX_CONFIG = {
   kind: "category",
   name: "BatRobot",
@@ -22,6 +27,14 @@ export const BATROBOT_TOOLBOX_CONFIG = {
           kind: "block",
           type: "batrobot_input_read_light_sensor",
         },
+        {
+          kind: "block",
+          type: "batrobot_input_button1_press",
+        },
+        // {
+        //   kind: "block",
+        //   type: "batrobot_input_button2_press",
+        // },
       ],
     },
     {
@@ -178,6 +191,40 @@ defineBlocksWithJsonArray([
     colour: 190,
   },
   {
+    type: "batrobot_input_button1_press",
+    tooltip: "",
+    helpUrl: "",
+    message0: "When button1 is pressed %1 %2",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+      {
+        type: "input_statement",
+        name: "HANDLER",
+      },
+    ],
+    colour: 190,
+  },
+  {
+    type: "batrobot_input_button2_press",
+    tooltip: "",
+    helpUrl: "",
+    message0: "When button2 is pressed %1 %2",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+      {
+        type: "input_statement",
+        name: "HANDLER",
+      },
+    ],
+    colour: 190,
+  },
+  {
     type: "batrobot_output_drive_forward",
     tooltip: "",
     helpUrl: "",
@@ -305,47 +352,47 @@ generator.forBlock["batrobot_input_ultrasonic_distance"] = function (
   block,
   generator
 ) {
-  generator.addSetup(`pinmode_a0`, `pinMode(A0, OUTPUT);`);
-  generator.addSetup(`pinmode_a1`, `pinMode(A1, INPUT);`);
+  generator.addSetup(`pinmode_a0`, `${generator.INDENT}pinMode(A0, OUTPUT);`);
+  generator.addSetup(`pinmode_a1`, `${generator.INDENT}pinMode(A1, INPUT);`);
 
   const varName = generator.getVariableName("value");
   const fnCode = `\
 int batrobot_sensor_distance(byte trig_pin, byte dist_pin) {
-    digitalWrite(trig_pin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trig_pin, LOW);
-    int ${varName} = (pulseIn(dist_pin, HIGH) / 2) / 29.1 + 2;
-    if (${varName}>255) { ${varName}=255; }
-    delay(20);
-    return ${varName};
+${generator.INDENT}digitalWrite(trig_pin, HIGH);
+${generator.INDENT}delayMicroseconds(10);
+${generator.INDENT}digitalWrite(trig_pin, LOW);
+${generator.INDENT}int ${varName} = (pulseIn(dist_pin, HIGH) / 2) / 29.1 + 2;
+${generator.INDENT}if (${varName}>255) { ${varName}=255; }
+${generator.INDENT}delay(20);
+${generator.INDENT}return ${varName};
 }`;
-  const fnName = generator.provideFunction_("batrobot_sensor_distance", fnCode);
+  const fnName = "batrobot_sensor_distance"; // generator.provideFunction_("batrobot_sensor_distance", fnCode);
   generator.addFunction(fnName, fnCode);
 
   const code = `${fnName}(A0, A1)`;
-  return [code, Order.NONE];
+  return [code, Order.ATOMIC];
 };
 
 generator.forBlock["batrobot_output_drive_forward"] = function (
   block,
   generator
 ) {
-  generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
-  generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
-  generator.addSetup(`pinmode_6`, `pinMode(6, OUTPUT);`);
-  generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
-  generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
+  generator.addSetup(`pinmode_3`, `${generator.INDENT}pinMode(3, OUTPUT);`);
+  generator.addSetup(`pinmode_4`, `${generator.INDENT}pinMode(4, OUTPUT);`);
+  generator.addSetup(`pinmode_5`, `${generator.INDENT}pinMode(5, OUTPUT);`);
+  generator.addSetup(`pinmode_6`, `${generator.INDENT}pinMode(6, OUTPUT);`);
+  generator.addSetup(`pinmode_7`, `${generator.INDENT}pinMode(7, OUTPUT);`);
+  generator.addSetup(`pinmode_8`, `${generator.INDENT}pinMode(8, OUTPUT);`);
 
   const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
 
   const code = `\
-  analogWrite(6, ${value_speed});
-  digitalWrite(7, LOW);
-  digitalWrite(8, HIGH);
-  analogWrite(5, ${value_speed});
-  digitalWrite(4, LOW);
-  digitalWrite(3, HIGH);\n`;
+analogWrite(6, ${value_speed});
+digitalWrite(7, LOW);
+digitalWrite(8, HIGH);
+analogWrite(5, ${value_speed});
+digitalWrite(4, LOW);
+digitalWrite(3, HIGH);\n`;
   return code;
 };
 
@@ -353,92 +400,92 @@ generator.forBlock["batrobot_output_drive_backward"] = function (
   block,
   generator
 ) {
-  generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
-  generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
-  generator.addSetup(`pinmode_6`, `pinMode(6, OUTPUT);`);
-  generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
-  generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
+  generator.addSetup(`pinmode_3`, `${generator.INDENT}pinMode(3, OUTPUT);`);
+  generator.addSetup(`pinmode_4`, `${generator.INDENT}pinMode(4, OUTPUT);`);
+  generator.addSetup(`pinmode_5`, `${generator.INDENT}pinMode(5, OUTPUT);`);
+  generator.addSetup(`pinmode_6`, `${generator.INDENT}pinMode(6, OUTPUT);`);
+  generator.addSetup(`pinmode_7`, `${generator.INDENT}pinMode(7, OUTPUT);`);
+  generator.addSetup(`pinmode_8`, `${generator.INDENT}pinMode(8, OUTPUT);`);
 
   const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
 
   const code = `\
-  analogWrite(6, ${value_speed});
-  digitalWrite(7, HIGH);
-  digitalWrite(8, LOW);
-  analogWrite(5, ${value_speed});
-  digitalWrite(4, HIGH);
-  digitalWrite(3, LOW);\n`;
+analogWrite(6, ${value_speed});
+digitalWrite(7, HIGH);
+digitalWrite(8, LOW);
+analogWrite(5, ${value_speed});
+digitalWrite(4, HIGH);
+digitalWrite(3, LOW);\n`;
   return code;
 };
 
 generator.forBlock["batrobot_output_turn_right"] = function (block, generator) {
-  generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
-  generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
-  generator.addSetup(`pinmode_6`, `pinMode(6, OUTPUT);`);
-  generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
-  generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
+  generator.addSetup(`pinmode_3`, `${generator.INDENT}pinMode(3, OUTPUT);`);
+  generator.addSetup(`pinmode_4`, `${generator.INDENT}pinMode(4, OUTPUT);`);
+  generator.addSetup(`pinmode_5`, `${generator.INDENT}pinMode(5, OUTPUT);`);
+  generator.addSetup(`pinmode_6`, `${generator.INDENT}pinMode(6, OUTPUT);`);
+  generator.addSetup(`pinmode_7`, `${generator.INDENT}pinMode(7, OUTPUT);`);
+  generator.addSetup(`pinmode_8`, `${generator.INDENT}pinMode(8, OUTPUT);`);
 
   const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
 
   const code = `\
-  analogWrite(6, ${value_speed});
-  digitalWrite(7, HIGH);
-  digitalWrite(8, LOW);
-  analogWrite(5, ${value_speed});
-  digitalWrite(4, LOW);
-  digitalWrite(3, HIGH);\n`;
+analogWrite(6, ${value_speed});
+digitalWrite(7, HIGH);
+digitalWrite(8, LOW);
+analogWrite(5, ${value_speed});
+digitalWrite(4, LOW);
+digitalWrite(3, HIGH);\n`;
   return code;
 };
 
 generator.forBlock["batrobot_output_turn_left"] = function (block, generator) {
-  generator.addSetup(`pinmode_3`, `pinMode(3, OUTPUT);`);
-  generator.addSetup(`pinmode_4`, `pinMode(4, OUTPUT);`);
-  generator.addSetup(`pinmode_5`, `pinMode(5, OUTPUT);`);
-  generator.addSetup(`pinmode_6`, `pinMode(6, OUTPUT);`);
-  generator.addSetup(`pinmode_7`, `pinMode(7, OUTPUT);`);
-  generator.addSetup(`pinmode_8`, `pinMode(8, OUTPUT);`);
+  generator.addSetup(`pinmode_3`, `${generator.INDENT}pinMode(3, OUTPUT);`);
+  generator.addSetup(`pinmode_4`, `${generator.INDENT}pinMode(4, OUTPUT);`);
+  generator.addSetup(`pinmode_5`, `${generator.INDENT}pinMode(5, OUTPUT);`);
+  generator.addSetup(`pinmode_6`, `${generator.INDENT}pinMode(6, OUTPUT);`);
+  generator.addSetup(`pinmode_7`, `${generator.INDENT}pinMode(7, OUTPUT);`);
+  generator.addSetup(`pinmode_8`, `${generator.INDENT}pinMode(8, OUTPUT);`);
 
   const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
 
   const code = `\
-  analogWrite(6, ${value_speed});
-  digitalWrite(7, LOW);
-  digitalWrite(8, HIGH);
-  analogWrite(5, ${value_speed});
-  digitalWrite(4, HIGH);
-  digitalWrite(3, LOW);\n`;
+analogWrite(6, ${value_speed});
+digitalWrite(7, LOW);
+digitalWrite(8, HIGH);
+analogWrite(5, ${value_speed});
+digitalWrite(4, HIGH);
+digitalWrite(3, LOW);\n`;
   return code;
 };
 
 generator.forBlock["batrobot_output_start_buzz"] = function (block, generator) {
-  generator.addSetup(`pinmode_13`, `pinMode(13, OUTPUT);`);
+  generator.addSetup(`pinmode_13`, `${generator.INDENT}pinMode(13, OUTPUT);`);
 
-  const code = "digitalWrite(13, HIGH)";
+  const code = "digitalWrite(13, HIGH);\n";
   return code;
 };
 
 generator.forBlock["batrobot_output_stop_buzz"] = function (block, generator) {
-  generator.addSetup(`pinmode_13`, `pinMode(13, OUTPUT);`);
+  generator.addSetup(`pinmode_13`, `${generator.INDENT}pinMode(13, OUTPUT);`);
 
-  const code = "digitalWrite(13, LOW)";
+  const code = "digitalWrite(13, LOW);\n";
   return code;
 };
 
 generator.forBlock["batrobot_output_set_led"] = function (block, generator) {
-  generator.addSetup(`pinmode_9`, `pinMode(9, OUTPUT);`);
-  generator.addSetup(`pinmode_10`, `pinMode(10, OUTPUT);`);
-  generator.addSetup(`pinmode_11`, `pinMode(11, OUTPUT);`);
+  generator.addSetup(`pinmode_9`, `${generator.INDENT}pinMode(9, OUTPUT);`);
+  generator.addSetup(`pinmode_10`, `${generator.INDENT}pinMode(10, OUTPUT);`);
+  generator.addSetup(`pinmode_11`, `${generator.INDENT}pinMode(11, OUTPUT);`);
 
   const value_red = generator.valueToCode(block, "RED", Order.ATOMIC);
   const value_green = generator.valueToCode(block, "GREEN", Order.ATOMIC);
   const value_blue = generator.valueToCode(block, "BLUE", Order.ATOMIC);
 
   const code = `\
-  analogWrite(11, ${value_red});
-  analogWrite(10, ${value_green});
-  analogWrite(9, ${value_blue});\n`;
+analogWrite(11, ${value_red});
+analogWrite(10, ${value_green});
+analogWrite(9, ${value_blue});\n`;
   return code;
 };
 
@@ -446,9 +493,56 @@ generator.forBlock["batrobot_input_read_light_sensor"] = function (
   block,
   generator
 ) {
-  generator.addSetup(`pinmode_A2`, `pinMode(A2, INPUT);`);
+  generator.addSetup(`pinmode_A2`, `${generator.INDENT}pinMode(A2, INPUT);`);
 
   const code = "analogRead(A2)";
   // TODO: Change Order.NONE to the correct operator precedence strength
   return [code, Order.ATOMIC];
 };
+
+generator.forBlock["batrobot_input_button1_press"] = function (
+  block,
+  generator
+) {
+  generator.addSetup(`pinmode_2`, `${generator.INDENT}pinMode(2, INPUT);`);
+  const statement_handler = generator.statementToCode(block, "HANDLER");
+  // console.log("batrobot_input_button1_press", {
+  //   statement_handler,
+  //   variables: generator.definitions_,
+  // });
+  const fnCode = `void batrobot_input_button1_handler() {\n${statement_handler}}`;
+  const fnName = "batrobot_input_button1_handler";
+  // generator.provideFunction_(
+  //   "batrobot_input_button1_handler",
+  //   fnCode
+  // );
+  generator.addFunction(fnName, fnCode);
+  generator.addSetup(
+    "batrobot_input_button1_handler",
+    `${generator.INDENT}attachInterrupt(digitalPinToInterrupt(2), ${fnName}, RISING);`
+  );
+  const code = "";
+  return code;
+};
+
+// generator.forBlock["batrobot_input_button2_press"] = function (
+//   block,
+//   generator
+// ) {
+//   generator.addSetup(`pinmode_2`, `${generator.INDENT}pinMode(2, INPUT);`);
+//   const statement_handler = generator.statementToCode(block, "HANDLER");
+
+//   const fnCode = `void batrobot_input_button2_handler() {\n${statement_handler}}`;
+//   const fnName = "batrobot_input_button2_handler";
+//   // generator.provideFunction_(
+//   //   "batrobot_input_button2_handler",
+//   //   fnCode
+//   // );
+//   generator.addFunction(fnName, fnCode);
+//   generator.addSetup(
+//     "batrobot_input_button2_handler",
+//     `${generator.INDENT}attachInterrupt(digitalPinToInterrupt(12), ${fnName}, RISING);`
+//   );
+//   const code = "";
+//   return code;
+// };

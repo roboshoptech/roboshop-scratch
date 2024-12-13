@@ -4,6 +4,10 @@ import { arduinoGenerator } from "./generators/arduino";
 
 const generator = arduinoGenerator;
 
+export const ARDUINO_TOOLBOX_MAX_INSTANCES = {
+  arduino_setup_loop: 1,
+};
+
 export const ARDUINO_TOOLBOX_CONFIG = {
   kind: "category",
   name: "Arduino",
@@ -381,9 +385,9 @@ generator.forBlock["arduino_pinmode"] = function (block, generator) {
 
   // TODO: Assemble javascript into the code variable.
   // const code = `pinMode(${value_pin}, ${dropdown_mode});`;
-  generator.addUserSetup(
+  generator.addSetup(
     `pinmode_${value_pin}`,
-    `pinMode(${value_pin}, ${dropdown_mode});`
+    `${generator.INDENT}pinMode(${value_pin}, ${dropdown_mode});`
   );
   return "";
 };
@@ -393,9 +397,9 @@ generator.forBlock["arduino_analog_read"] = function (block, generator) {
   const value_name = generator.valueToCode(block, "PIN", Order.ATOMIC);
 
   if (isPin(value_name)) {
-    generator.addUserSetup(
+    generator.addSetup(
       `pinmode_${value_name}`,
-      `pinMode(${value_name}, INPUT);`
+      `${generator.INDENT}pinMode(${value_name}, INPUT);`
     );
   }
 
@@ -410,9 +414,9 @@ generator.forBlock["arduino_digital_read"] = function (block, generator) {
   const value_pin = generator.valueToCode(block, "PIN", Order.ATOMIC);
 
   if (isPin(value_pin)) {
-    generator.addUserSetup(
+    generator.addSetup(
       `pinmode_${value_pin}`,
-      `pinMode(${value_pin}, INPUT);`
+      `${generator.INDENT}pinMode(${value_pin}, INPUT);`
     );
   }
   const code = `digitalRead(${value_pin})`;
@@ -428,9 +432,9 @@ generator.forBlock["arduino_digital_write"] = function (block, generator) {
   // console.log("arduino_digital_write", value_pin);
 
   if (isPin(value_pin)) {
-    generator.addUserSetup(
+    generator.addSetup(
       `pinmode_${value_pin}`,
-      `pinMode(${value_pin}, OUTPUT);`
+      `${generator.INDENT}pinMode(${value_pin}, OUTPUT);`
     );
   }
 
@@ -444,9 +448,9 @@ generator.forBlock["arduino_analog_write"] = function (block, generator) {
   const value_state = generator.valueToCode(block, "STATE", Order.ATOMIC);
 
   if (isPin(value_pin)) {
-    generator.addUserSetup(
+    generator.addSetup(
       `pinmode_${value_pin}`,
-      `pinMode(${value_pin}, OUTPUT);`
+      `${generator.INDENT}pinMode(${value_pin}, OUTPUT);`
     );
   }
   const code = `analogWrite(${value_pin}, ${value_state});\n`;
@@ -514,8 +518,10 @@ defineBlocksWithJsonArray([
 generator.forBlock["arduino_serial_speed"] = function (block, generator) {
   const dropdown_name = block.getFieldValue("NAME");
 
-  // TODO: Assemble javascript into the code variable.
-  generator.addUserSetup(block.id, `Serial.begin(${dropdown_name});`);
+  generator.addUserSetup(
+    block.id,
+    `${generator.INDENT}Serial.begin(${dropdown_name});`
+  );
   return "";
 };
 
