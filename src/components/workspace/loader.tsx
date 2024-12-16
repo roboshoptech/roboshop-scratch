@@ -277,13 +277,17 @@ export function WorkspaceLoader({ workspace }: Props) {
                     className={button({ kind: "text" })}
                     onClick={() => {
                       const key = `${APP_PROJECT}-${project.id}-${project.name}`;
+                      setCurrentProject(project);
                       const serializedValue = localStorage.getItem(key);
                       if (serializedValue) {
-                        serialization.workspaces.load(
-                          JSON.parse(serializedValue),
-                          workspace
-                        );
-                        setCurrentProject(project);
+                        try {
+                          serialization.workspaces.load(
+                            JSON.parse(serializedValue),
+                            workspace
+                          );
+                        } catch (err) {
+                          alert("This project could not be opened");
+                        }
                       }
                     }}
                   >
