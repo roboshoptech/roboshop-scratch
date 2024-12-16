@@ -186,6 +186,94 @@ export const ARDUINO_TOOLBOX_CONFIG = {
           kind: "block",
           type: "arduino_serial_speed",
         },
+        {
+          kind: "block",
+          type: "arduino_serial_write_byte",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 0,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "arduino_serial_write_string",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "text",
+                fields: {
+                  TEXT: "",
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "arduino_serial_print_number",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 0,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "arduino_serial_print_text",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "text",
+                fields: {
+                  TEXT: "",
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "arduino_serial_println_number",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 0,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "arduino_serial_println_text",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "text",
+                fields: {
+                  TEXT: "",
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "arduino_serial_flush",
+        },
       ],
     },
   ],
@@ -629,7 +717,7 @@ defineBlocksWithJsonArray([
     type: "arduino_serial_speed",
     tooltip: "",
     helpUrl: "",
-    message0: "Serial communication speed %1 bits/s %2",
+    message0: "serial communication speed %1 bits/s %2",
     args0: [
       {
         type: "field_dropdown",
@@ -653,6 +741,137 @@ defineBlocksWithJsonArray([
     nextStatement: null,
     colour: 180,
   },
+  {
+    type: "arduino_serial_write_byte",
+    tooltip: "",
+    helpUrl: "",
+    message0: "serial write byte %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "VALUE",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_serial_write_string",
+    tooltip: "",
+    helpUrl: "",
+    message0: "serial write string %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "VALUE",
+        check: "String",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_serial_print_number",
+    tooltip: "",
+    helpUrl: "",
+    message0: "serial print number %1 %2",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "FORMAT",
+        options: [
+          ["decimal", "DEC"],
+          ["hexadecimal", "HEX"],
+          ["binary", "BIN"],
+          ["octal", "OCT"],
+        ],
+      },
+      {
+        type: "input_value",
+        name: "VALUE",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_serial_print_text",
+    tooltip: "",
+    helpUrl: "",
+    message0: "serial print text %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "VALUE",
+        check: "String",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_serial_println_number",
+    tooltip: "",
+    helpUrl: "",
+    message0: "serial print line number %1 %2",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "FORMAT",
+        options: [
+          ["decimal", "DEC"],
+          ["hexadecimal", "HEX"],
+          ["binary", "BIN"],
+          ["octal", "OCT"],
+        ],
+      },
+      {
+        type: "input_value",
+        name: "VALUE",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_serial_println_text",
+    tooltip: "",
+    helpUrl: "",
+    message0: "serial print line text %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "VALUE",
+        check: "String",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_serial_flush",
+    tooltip: "",
+    helpUrl: "",
+    message0: "serial flush %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "VALUE",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
 ]);
 
 generator.forBlock["arduino_serial_speed"] = function (block, generator) {
@@ -663,6 +882,66 @@ generator.forBlock["arduino_serial_speed"] = function (block, generator) {
     `${generator.INDENT}Serial.begin(${dropdown_name});`
   );
   return "";
+};
+
+generator.forBlock["arduino_serial_write_byte"] = function (block, generator) {
+  const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
+  const code = `Serial.write(${value_value});\n`;
+  return code;
+};
+
+generator.forBlock["arduino_serial_write_string"] = function (
+  block,
+  generator
+) {
+  const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
+  const code = `Serial.write(${value_value});\n`;
+  return code;
+};
+
+generator.forBlock["arduino_serial_print_number"] = function (
+  block,
+  generator
+) {
+  const dropdown_format = block.getFieldValue("FORMAT");
+  const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
+
+  const code = `Serial.print(${value_value}, ${dropdown_format});\n`;
+  return code;
+};
+
+generator.forBlock["arduino_serial_print_text"] = function (block, generator) {
+  const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
+
+  const code = `Serial.print(${value_value});\n`;
+  return code;
+};
+
+generator.forBlock["arduino_serial_println_number"] = function (
+  block,
+  generator
+) {
+  const dropdown_format = block.getFieldValue("FORMAT");
+  const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
+
+  const code = `Serial.println(${value_value}, ${dropdown_format});\n`;
+  return code;
+};
+
+generator.forBlock["arduino_serial_println_text"] = function (
+  block,
+  generator
+) {
+  const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
+
+  const code = `Serial.println(${value_value});\n`;
+  return code;
+};
+
+generator.forBlock["arduino_serial_flush"] = function () {
+  // TODO: Assemble javascript into the code variable.
+  const code = "Serial.flush();\n";
+  return code;
 };
 
 function isPin(v: string) {

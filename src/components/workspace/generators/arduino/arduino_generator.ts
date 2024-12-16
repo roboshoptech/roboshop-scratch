@@ -303,7 +303,7 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
   quote_(string: string): string {
     string = string.replace(/\\/g, "\\\\").replace(/\n/g, "\\\n");
 
-    let quote = "'";
+    let quote = `"`;
     if (string.indexOf("'") !== -1) {
       if (string.indexOf('"') === -1) {
         quote = '"';
