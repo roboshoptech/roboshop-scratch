@@ -119,6 +119,17 @@ export const ARDUINO_TOOLBOX_CONFIG = {
         },
         {
           kind: "block",
+          type: "arduino_transform",
+        },
+      ],
+    },
+    {
+      kind: "category",
+      name: "Time",
+      colour: "180",
+      contents: [
+        {
+          kind: "block",
           type: "arduino_delay",
           inputs: {
             VALUE: {
@@ -134,6 +145,35 @@ export const ARDUINO_TOOLBOX_CONFIG = {
         {
           kind: "block",
           type: "arduino_millis",
+        },
+      ],
+    },
+    {
+      kind: "category",
+      name: "Servo",
+      colour: "180",
+      contents: [
+        {
+          kind: "block",
+          type: "arduino_servo_control",
+          inputs: {
+            // PIN: {
+            //   shadow: {
+            //     type: "math_number",
+            //     fields: {
+            //       NUM: 0,
+            //     },
+            //   },
+            // },
+            ANGLE: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 0,
+                },
+              },
+            },
+          },
         },
       ],
     },
@@ -357,6 +397,74 @@ defineBlocksWithJsonArray([
     output: "Number",
     colour: 180,
   },
+  {
+    type: "arduino_servo_control",
+    tooltip: "",
+    helpUrl: "",
+    message0: "move servo at pin %1 to angle %2",
+    args0: [
+      {
+        type: "field_number",
+        name: "PIN",
+        value: 0,
+        min: 0,
+        max: 16,
+      },
+      {
+        type: "input_value",
+        name: "ANGLE",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_transform",
+    tooltip: "",
+    helpUrl: "",
+    message0: "transform value %1 from range %2 to %3 %4 to range %5 to %6 %7",
+    args0: [
+      {
+        type: "input_value",
+        name: "NAME",
+        check: "Number",
+      },
+      {
+        type: "field_number",
+        name: "FROM_LOW",
+        value: 0,
+      },
+      {
+        type: "field_number",
+        name: "FROM_HIGH",
+        value: 1023,
+      },
+      {
+        type: "input_dummy",
+        name: "D_FROM",
+        align: "RIGHT",
+      },
+      {
+        type: "field_number",
+        name: "TO_LOW",
+        value: 0,
+      },
+      {
+        type: "field_number",
+        name: "TO_HIGH",
+        value: 180,
+      },
+      {
+        type: "input_dummy",
+        name: "D_TO",
+        align: "RIGHT",
+      },
+    ],
+    output: "Number",
+    colour: 180,
+  },
 ]);
 
 generator.forBlock["arduino_setup_loop"] = function (block, generator) {
@@ -407,7 +515,7 @@ generator.forBlock["arduino_analog_read"] = function (block, generator) {
   const code = `analogRead(${value_name})`;
 
   // TODO: Change Order.NONE to the correct operator precedence strength
-  return [code, Order.NONE];
+  return [code, Order.ATOMIC];
 };
 
 generator.forBlock["arduino_digital_read"] = function (block, generator) {
@@ -460,19 +568,32 @@ generator.forBlock["arduino_analog_write"] = function (block, generator) {
 
 generator.forBlock["arduino_logic_state"] = function (block) {
   const dropdown_name = block.getFieldValue("NAME");
-
-  // TODO: Assemble javascript into the code variable.
   const code = dropdown_name;
-  // TODO: Change Order.NONE to the correct operator precedence strength
-  return [code, Order.NONE];
+  return [code, Order.ATOMIC];
 };
+
+generator.forBlock["arduino_transform"] = function (block, generator) {
+  // TODO: change Order.ATOMIC to the correct operator precedence strength
+  const value_name = generator.valueToCode(block, "NAME", Order.ATOMIC);
+
+  const number_from_low = block.getFieldValue("FROM_LOW");
+  const number_from_high = block.getFieldValue("FROM_HIGH");
+
+  const number_to_low = block.getFieldValue("TO_LOW");
+  const number_to_high = block.getFieldValue("TO_HIGH");
+
+  const code = `map(${value_name}, ${number_from_low}, ${number_from_high}, ${number_to_low}, ${number_to_high})`;
+  return [code, Order.ATOMIC];
+};
+
+/// Time
 
 generator.forBlock["arduino_delay"] = function (block, generator) {
   // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
 
   // TODO: Assemble javascript into the code variable.
-  const code = `delay(${value_value});`;
+  const code = `delay(${value_value});\n`;
   return code;
 };
 
@@ -481,6 +602,24 @@ generator.forBlock["arduino_millis"] = function () {
   const code = `millis();`;
   // TODO: Change Order.NONE to the correct operator precedence strength
   return [code, Order.NONE];
+};
+
+/// Servo
+
+generator.forBlock["arduino_servo_control"] = function (block, generator) {
+  generator.addLibrary("Servo", "#include <Servo.h>");
+
+  const number_pin = block.getFieldValue("PIN");
+
+  generator.addVariable(`servo_${number_pin}`, `Servo servo_${number_pin};`);
+  generator.addSetup(
+    `servo_${number_pin}_attach`,
+    `${generator.INDENT}servo_${number_pin}.attach(${number_pin});`
+  );
+
+  const value_angle = generator.valueToCode(block, "ANGLE", Order.ATOMIC);
+  const code = `servo_${number_pin}.write(${value_angle});\n`;
+  return code;
 };
 
 /// Serial communication
