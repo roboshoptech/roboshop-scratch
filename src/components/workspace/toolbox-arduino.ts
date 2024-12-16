@@ -29,6 +29,10 @@ export const ARDUINO_TOOLBOX_CONFIG = {
         },
         {
           kind: "block",
+          type: "arduino_define_variable",
+        },
+        {
+          kind: "block",
           type: "arduino_pinmode",
           inputs: {
             PIN: {
@@ -329,6 +333,50 @@ defineBlocksWithJsonArray([
     colour: 180,
   },
   {
+    type: "arduino_define_variable",
+    tooltip: "",
+    helpUrl: "",
+    message0: "define %1 as %2 %3 volatile %4 %5",
+    args0: [
+      {
+        type: "field_variable",
+        name: "VAR",
+        variable: "item",
+      },
+      {
+        type: "field_dropdown",
+        name: "TYPE",
+        options: [
+          ["char", "char"],
+          ["string", "String"],
+          ["byte", "byte"],
+          ["int", "int"],
+          ["unsigned", "unsigned int"],
+          ["long", "long"],
+          ["unsigned long", "unsigned long"],
+          ["float", "float"],
+        ],
+      },
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+      {
+        type: "field_checkbox",
+        name: "VOLATILE",
+        checked: "FALSE",
+      },
+      {
+        type: "input_dummy",
+        name: "D2",
+        align: "RIGHT",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
     type: "arduino_pinmode",
     tooltip: "",
     helpUrl: "",
@@ -573,6 +621,19 @@ generator.forBlock["arduino_include_library"] = function (block, generator) {
   // const code = `#include "${text_libname}.h";`;
   generator.addLibrary(text_libname, `#include "${text_libname}.h"`);
   return "";
+};
+
+generator.forBlock["arduino_define_variable"] = function (block, generator) {
+  const variable_var = generator.getVariableName(block.getFieldValue("VAR"));
+  let dropdown_type = block.getFieldValue("TYPE");
+
+  const checkbox_volatile = block.getFieldValue("VOLATILE");
+  if (checkbox_volatile) {
+    dropdown_type = "volatile " + dropdown_type;
+  }
+  generator.setVariableType(variable_var, dropdown_type);
+  const code = "";
+  return code;
 };
 
 generator.forBlock["arduino_pinmode"] = function (block, generator) {

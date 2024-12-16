@@ -177,10 +177,7 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
     // Declare all of the variables.
     if (defvars.length) {
       this.definitions_ = Object.fromEntries(
-        defvars.map((v) => [
-          v,
-          v.startsWith("volatile_") ? `volatile int ${v};` : `int ${v};`,
-        ])
+        defvars.map((v) => [v, `int@@${v};`])
       );
     }
     this.isInitialized = true;
@@ -227,7 +224,9 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
     const newcode =
       (macros.length > 0 ? `${macros.join("\n")}\n\n` : "") +
       (libraries.length > 0 ? `${libraries.join("\n")}\n\n` : "") +
-      (definitions.length > 0 ? `${definitions.join("\n")}\n\n` : "") +
+      (definitions.length > 0
+        ? `${definitions.map((l) => l.replace("@@", " ")).join("\n")}\n\n`
+        : "") +
       (variables.length > 0 ? `${variables.join("\n")}\n\n` : "") +
       (objects.length > 0 ? `${objects.join("\n")}\n\n` : "") +
       (functions.length > 0 ? `${functions.join("\n")}\n\n` : "") +
@@ -282,6 +281,15 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
     if (this.loops_[tag] === undefined) {
       this.loops_[tag] = code;
     }
+  }
+
+  setVariableType(tag: string, code: string) {
+    console.log("setVariableType", this.definitions_);
+    if (!this.definitions_[tag]) {
+      throw new Error("variable doesn't exist");
+    }
+    const [_, varname] = this.definitions_[tag].split("@@");
+    this.definitions_[tag] = `${code}@@${varname}`;
   }
 
   /**
