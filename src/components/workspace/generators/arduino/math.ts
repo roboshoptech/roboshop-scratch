@@ -204,7 +204,7 @@ export function math_change(block: Block, generator: ArduinoGenerator) {
     generator.valueToCode(block, "DELTA", Order.ADDITION) || "0";
 
   const varName = generator.getVariableName(block.getFieldValue("VAR"));
-  return varName + argument0 + ";\n";
+  return varName + " += " + argument0 + ";\n";
 }
 
 // Rounding functions have a single operand.

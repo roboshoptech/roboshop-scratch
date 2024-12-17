@@ -131,6 +131,10 @@ export const BATROBOT_TOOLBOX_CONFIG = {
             },
           },
         },
+        {
+          kind: "block",
+          type: "batrobot_output_stop_driving",
+        },
       ],
     },
   ],
@@ -283,6 +287,21 @@ defineBlocksWithJsonArray([
         type: "input_value",
         name: "SPEED",
         check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 190,
+  },
+  {
+    type: "batrobot_output_stop_driving",
+    tooltip: "",
+    helpUrl: "",
+    message0: "stop driving %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
       },
     ],
     previousStatement: null,
@@ -456,6 +475,27 @@ digitalWrite(7, LOW);
 digitalWrite(8, HIGH);
 analogWrite(5, ${value_speed});
 digitalWrite(4, HIGH);
+digitalWrite(3, LOW);\n`;
+  return code;
+};
+
+generator.forBlock["batrobot_output_stop_driving"] = function (
+  block,
+  generator
+) {
+  generator.addSetup(`pinmode_3`, `${generator.INDENT}pinMode(3, OUTPUT);`);
+  generator.addSetup(`pinmode_4`, `${generator.INDENT}pinMode(4, OUTPUT);`);
+  generator.addSetup(`pinmode_5`, `${generator.INDENT}pinMode(5, OUTPUT);`);
+  generator.addSetup(`pinmode_6`, `${generator.INDENT}pinMode(6, OUTPUT);`);
+  generator.addSetup(`pinmode_7`, `${generator.INDENT}pinMode(7, OUTPUT);`);
+  generator.addSetup(`pinmode_8`, `${generator.INDENT}pinMode(8, OUTPUT);`);
+
+  const code = `\
+analogWrite(6, 0);
+digitalWrite(7, LOW);
+digitalWrite(8, LOW);
+analogWrite(5, 0);
+digitalWrite(4, LOW);
 digitalWrite(3, LOW);\n`;
   return code;
 };
