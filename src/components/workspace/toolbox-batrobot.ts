@@ -32,6 +32,10 @@ export const BATROBOT_TOOLBOX_CONFIG = {
           kind: "block",
           type: "batrobot_input_button1_press",
         },
+        {
+          kind: "block",
+          type: "batrobot_input_button_pressed",
+        },
         // {
         //   kind: "block",
         //   type: "batrobot_input_button2_press",
@@ -199,7 +203,7 @@ defineBlocksWithJsonArray([
     type: "batrobot_input_button1_press",
     tooltip: "",
     helpUrl: "",
-    message0: "When button1 is pressed %1 %2",
+    message0: "When Button1 is pressed %1 %2",
     args0: [
       {
         type: "input_dummy",
@@ -213,20 +217,25 @@ defineBlocksWithJsonArray([
     colour: 190,
   },
   {
-    type: "batrobot_input_button2_press",
+    type: "batrobot_input_button_pressed",
     tooltip: "",
     helpUrl: "",
-    message0: "When button2 is pressed %1 %2",
+    message0: "%1 is pressed %2",
     args0: [
+      {
+        type: "field_dropdown",
+        name: "BUTTON",
+        options: [
+          ["Button1", "2"],
+          ["Button2", "12"],
+        ],
+      },
       {
         type: "input_dummy",
         name: "NAME",
       },
-      {
-        type: "input_statement",
-        name: "HANDLER",
-      },
     ],
+    output: "Boolean",
     colour: 190,
   },
   {
@@ -566,24 +575,17 @@ generator.forBlock["batrobot_input_button1_press"] = function (
   return code;
 };
 
-// generator.forBlock["batrobot_input_button2_press"] = function (
-//   block,
-//   generator
-// ) {
-//   generator.addSetup(`pinmode_2`, `${generator.INDENT}pinMode(2, INPUT);`);
-//   const statement_handler = generator.statementToCode(block, "HANDLER");
+generator.forBlock["batrobot_input_button_pressed"] = function (
+  block,
+  generator
+) {
+  const dropdown_button = block.getFieldValue("BUTTON");
 
-//   const fnCode = `void batrobot_input_button2_handler() {\n${statement_handler}}`;
-//   const fnName = "batrobot_input_button2_handler";
-//   // generator.provideFunction_(
-//   //   "batrobot_input_button2_handler",
-//   //   fnCode
-//   // );
-//   generator.addFunction(fnName, fnCode);
-//   generator.addSetup(
-//     "batrobot_input_button2_handler",
-//     `${generator.INDENT}attachInterrupt(digitalPinToInterrupt(12), ${fnName}, RISING);`
-//   );
-//   const code = "";
-//   return code;
-// };
+  generator.addSetup(
+    `pinmode_${dropdown_button}`,
+    `${generator.INDENT}pinMode(${dropdown_button}, INPUT);`
+  );
+
+  const code = `digitalRead(${dropdown_button})`;
+  return [code, Order.ATOMIC];
+};
