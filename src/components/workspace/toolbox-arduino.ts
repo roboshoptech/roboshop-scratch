@@ -821,12 +821,12 @@ generator.forBlock["arduino_delaymicros"] = function (block, generator) {
 };
 
 generator.forBlock["arduino_millis"] = function () {
-  const code = `millis();`;
+  const code = `millis()`;
   return [code, Order.ATOMIC];
 };
 
 generator.forBlock["arduino_micros"] = function () {
-  const code = `micros();`;
+  const code = `micros()`;
   return [code, Order.ATOMIC];
 };
 
