@@ -48,6 +48,10 @@ export const BATROBOT_TOOLBOX_CONFIG = {
       colour: "190",
       contents: [
         {
+          kind: "label",
+          text: "Buzzer",
+        },
+        {
           kind: "block",
           type: "batrobot_output_start_buzz",
         },
@@ -56,12 +60,26 @@ export const BATROBOT_TOOLBOX_CONFIG = {
           type: "batrobot_output_stop_buzz",
         },
         {
+          kind: "sep",
+        },
+        {
+          kind: "label",
+          text: "Fan",
+        },
+        {
           kind: "block",
           type: "batrobot_output_start_fan",
         },
         {
           kind: "block",
           type: "batrobot_output_stop_fan",
+        },
+        {
+          kind: "sep",
+        },
+        {
+          kind: "label",
+          text: "LED",
         },
         {
           kind: "block",
@@ -86,6 +104,10 @@ export const BATROBOT_TOOLBOX_CONFIG = {
               },
             },
           },
+        },
+        {
+          kind: "label",
+          text: "Motor",
         },
         {
           kind: "block",
@@ -132,6 +154,20 @@ export const BATROBOT_TOOLBOX_CONFIG = {
         {
           kind: "block",
           type: "batrobot_output_turn_left",
+          inputs: {
+            SPEED: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 64,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "batrobot_output_drive_motor",
           inputs: {
             SPEED: {
               shadow: {
@@ -310,6 +346,39 @@ defineBlocksWithJsonArray([
     nextStatement: null,
     colour: 190,
   },
+  {
+    type: "batrobot_output_drive_motor",
+    tooltip: "",
+    helpUrl: "",
+    message0: "spin %1 motor %2 at speed %3",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "SIDE",
+        options: [
+          ["left", "LEFT"],
+          ["right", "RIGHT"],
+        ],
+      },
+      {
+        type: "field_dropdown",
+        name: "DIR",
+        options: [
+          ["forward", "FWD"],
+          ["backward", "BCK"],
+        ],
+      },
+      {
+        type: "input_value",
+        name: "SPEED",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 190,
+  },
+
   {
     type: "batrobot_output_stop_driving",
     tooltip: "",
@@ -523,6 +592,23 @@ digitalWrite(8, HIGH);
 analogWrite(5, ${value_speed});
 digitalWrite(4, HIGH);
 digitalWrite(3, LOW);\n`;
+  return code;
+};
+
+generator.forBlock["batrobot_output_drive_motor"] = function (
+  block,
+  generator
+) {
+  const dropdown_side = block.getFieldValue("SIDE");
+  const dropdown_dir = block.getFieldValue("DIR");
+  const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
+
+  const pins = dropdown_side === "LEFT" ? [6, 7, 8] : [5, 4, 3];
+
+  const code = `
+analogWrite(${pins[0]}, ${Math.max(0, Math.min(255, Number(value_speed)))});
+digitalWrite(${pins[1]}, ${dropdown_dir === "FWD" ? "HIGH" : "LOW"});
+digitalWrite(${pins[2]}, ${dropdown_dir === "FWD" ? "LOW" : "HIGH"});\n`;
   return code;
 };
 
