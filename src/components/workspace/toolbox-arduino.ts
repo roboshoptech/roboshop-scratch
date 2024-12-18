@@ -148,7 +148,25 @@ export const ARDUINO_TOOLBOX_CONFIG = {
         },
         {
           kind: "block",
+          type: "arduino_delaymicros",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 100,
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
           type: "arduino_millis",
+        },
+        {
+          kind: "block",
+          type: "arduino_micros",
         },
       ],
     },
@@ -270,6 +288,24 @@ export const ARDUINO_TOOLBOX_CONFIG = {
                 fields: {
                   TEXT: "",
                 },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "arduino_serial_println_labelvalue",
+          inputs: {
+            LABEL: {
+              shadow: {
+                type: "text",
+                fields: { TEXT: "" },
+              },
+            },
+            VALUE: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 0 },
               },
             },
           },
@@ -520,10 +556,45 @@ defineBlocksWithJsonArray([
     colour: 180,
   },
   {
+    type: "arduino_delaymicros",
+    tooltip: "",
+    helpUrl: "",
+    message0: "wait %1 microseconds %2",
+    args0: [
+      {
+        type: "input_value",
+        name: "VALUE",
+        align: "CENTRE",
+        check: "Number",
+      },
+      {
+        type: "input_dummy",
+        name: "D2",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
     type: "arduino_millis",
     tooltip: "",
     helpUrl: "",
     message0: "milliseconds since program started %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    output: "Number",
+    colour: 180,
+  },
+  {
+    type: "arduino_micros",
+    tooltip: "",
+    helpUrl: "",
+    message0: "microseconds since program started %1",
     args0: [
       {
         type: "input_dummy",
@@ -738,19 +809,25 @@ generator.forBlock["arduino_transform"] = function (block, generator) {
 /// Time
 
 generator.forBlock["arduino_delay"] = function (block, generator) {
-  // TODO: change Order.ATOMIC to the correct operator precedence strength
   const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
-
-  // TODO: Assemble javascript into the code variable.
   const code = `delay(${value_value});\n`;
   return code;
 };
 
+generator.forBlock["arduino_delaymicros"] = function (block, generator) {
+  const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
+  const code = `delayMicroseconds(${value_value});\n`;
+  return code;
+};
+
 generator.forBlock["arduino_millis"] = function () {
-  // TODO: Assemble javascript into the code variable.
   const code = `millis();`;
-  // TODO: Change Order.NONE to the correct operator precedence strength
-  return [code, Order.NONE];
+  return [code, Order.ATOMIC];
+};
+
+generator.forBlock["arduino_micros"] = function () {
+  const code = `micros();`;
+  return [code, Order.ATOMIC];
 };
 
 /// Servo
@@ -919,6 +996,28 @@ defineBlocksWithJsonArray([
     colour: 180,
   },
   {
+    type: "arduino_serial_println_labelvalue",
+    tooltip: "",
+    helpUrl: "",
+    message0: "print line label:  %1 value:  %2",
+    args0: [
+      {
+        type: "input_value",
+        name: "LABEL",
+        check: "String",
+      },
+      {
+        type: "input_value",
+        name: "VALUE",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+    inputsInline: true,
+  },
+  {
     type: "arduino_serial_flush",
     tooltip: "",
     helpUrl: "",
@@ -996,6 +1095,24 @@ generator.forBlock["arduino_serial_println_text"] = function (
   const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
 
   const code = `Serial.println(${value_value});\n`;
+  return code;
+};
+
+generator.forBlock["arduino_serial_println_labelvalue"] = function (
+  block,
+  generator
+) {
+  // TODO: change Order.ATOMIC to the correct operator precedence strength
+  const value_label = generator.valueToCode(block, "LABEL", Order.ATOMIC);
+
+  // TODO: change Order.ATOMIC to the correct operator precedence strength
+  const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
+
+  // TODO: Assemble javascript into the code variable.
+  const code = `
+Serial.print(${value_label});
+Serial.print(": ");
+Serial.println(${value_value});\n`;
   return code;
 };
 
