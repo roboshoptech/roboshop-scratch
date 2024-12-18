@@ -57,6 +57,14 @@ export const BATROBOT_TOOLBOX_CONFIG = {
         },
         {
           kind: "block",
+          type: "batrobot_output_start_fan",
+        },
+        {
+          kind: "block",
+          type: "batrobot_output_stop_fan",
+        },
+        {
+          kind: "block",
           type: "batrobot_output_set_led",
           inputs: {
             RED: {
@@ -348,6 +356,36 @@ defineBlocksWithJsonArray([
     colour: 190,
   },
   {
+    type: "batrobot_output_start_fan",
+    tooltip: "",
+    helpUrl: "",
+    message0: "start fan %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 190,
+  },
+  {
+    type: "batrobot_output_stop_fan",
+    tooltip: "",
+    helpUrl: "",
+    message0: "stop fan %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 190,
+  },
+  {
     type: "batrobot_output_set_led",
     tooltip: "",
     helpUrl: "",
@@ -520,6 +558,20 @@ generator.forBlock["batrobot_output_stop_buzz"] = function (block, generator) {
   generator.addSetup(`pinmode_13`, `${generator.INDENT}pinMode(13, OUTPUT);`);
 
   const code = "digitalWrite(13, LOW);\n";
+  return code;
+};
+
+generator.forBlock["batrobot_output_start_buzz"] = function (block, generator) {
+  generator.addSetup(`pinmode_12`, `${generator.INDENT}pinMode(12, OUTPUT);`);
+
+  const code = "digitalWrite(12, HIGH);\n";
+  return code;
+};
+
+generator.forBlock["batrobot_output_stop_buzz"] = function (block, generator) {
+  generator.addSetup(`pinmode_12`, `${generator.INDENT}pinMode(12, OUTPUT);`);
+
+  const code = "digitalWrite(12, LOW);\n";
   return code;
 };
 
