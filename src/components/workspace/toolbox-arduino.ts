@@ -316,6 +316,51 @@ export const ARDUINO_TOOLBOX_CONFIG = {
         },
       ],
     },
+    {
+      kind: "category",
+      name: "LCD",
+      colour: "180",
+      contents: [
+        {
+          kind: "block",
+          type: "arduino_lcd_setup",
+        },
+        {
+          kind: "block",
+          type: "arduino_lcd_print",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "text",
+                fields: { TEXT: "" },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "arduino_lcd_set_cursor",
+          inputs: {
+            POS_X: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 0 },
+              },
+            },
+            POS_Y: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 0 },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "arduino_lcd_clear",
+        },
+      ],
+    },
   ],
 };
 
@@ -1125,3 +1170,221 @@ generator.forBlock["arduino_serial_flush"] = function () {
 function isPin(v: string) {
   return !Number.isNaN(Number.parseInt(v, 16));
 }
+
+/// LCD
+
+defineBlocksWithJsonArray([
+  {
+    type: "arduino_lcd_setup",
+    tooltip: "",
+    helpUrl: "",
+    message0:
+      "setup LCD %1 with width %2 and height %3 %4 using pins: RS %5 , EN %6 , D4 %7 , D5 %8 , D6 %9 , D7 %10 %11 %12 %13",
+    args0: [
+      {
+        type: "field_variable",
+        name: "VAR",
+        variable: "item",
+      },
+      {
+        type: "field_number",
+        name: "DIM_WIDTH",
+        value: 16,
+        min: 0,
+      },
+      {
+        type: "field_number",
+        name: "DIM_HEIGHT",
+        value: 2,
+        min: 0,
+      },
+      {
+        type: "input_dummy",
+        name: "A",
+      },
+      {
+        type: "field_number",
+        name: "PIN_RS",
+        value: 12,
+        min: 0,
+      },
+      {
+        type: "field_number",
+        name: "PIN_EN",
+        value: 11,
+        min: 0,
+      },
+      {
+        type: "field_number",
+        name: "PIN_D4",
+        value: 5,
+        min: 0,
+      },
+      {
+        type: "field_number",
+        name: "PIN_D5",
+        value: 4,
+        min: 0,
+      },
+      {
+        type: "field_number",
+        name: "PIN_D6",
+        value: 3,
+        min: 0,
+      },
+      {
+        type: "field_number",
+        name: "PIN_D7",
+        value: 2,
+        min: 0,
+      },
+      {
+        type: "input_dummy",
+        name: "AA",
+      },
+      {
+        type: "field_image",
+        src: "https://docs.arduino.cc/static/7a7f1f877f04d48236ab166814aab58f/0a47e/lcd_photo.png",
+        width: 128,
+        height: 64,
+        alt: "*",
+        flipRtl: "FALSE",
+      },
+      {
+        type: "input_dummy",
+        name: "NAME",
+        align: "CENTRE",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_lcd_print",
+    tooltip: "",
+    helpUrl: "",
+    message0: "On screen %1 print %2",
+    args0: [
+      {
+        type: "field_variable",
+        name: "VAR",
+        variable: "item",
+      },
+      {
+        type: "input_value",
+        name: "VALUE",
+        check: ["Number", "String"],
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_lcd_set_cursor",
+    tooltip: "",
+    helpUrl: "",
+    message0: "On screen %1 place cursor at x: %2 y: %3",
+    args0: [
+      {
+        type: "field_variable",
+        name: "VAR",
+        variable: "item",
+      },
+      {
+        type: "input_value",
+        name: "POS_X",
+      },
+      {
+        type: "input_value",
+        name: "POS_Y",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+    inputsInline: true,
+  },
+  {
+    type: "arduino_lcd_clear",
+    tooltip: "",
+    helpUrl: "",
+    message0: "clear screen %1 %2",
+    args0: [
+      {
+        type: "field_variable",
+        name: "VAR",
+        variable: "item",
+      },
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+]);
+
+generator.forBlock["arduino_lcd_setup"] = function (block, generator) {
+  generator.addLibrary("LiquidCrystal", "#include <LiquidCrystal.h>");
+
+  const variable_var = generator.getVariableName(block.getFieldValue("VAR"));
+  const number_dim_width = block.getFieldValue("DIM_WIDTH");
+  const number_dim_height = block.getFieldValue("DIM_HEIGHT");
+
+  const number_pin_rs = block.getFieldValue("PIN_RS");
+  const number_pin_en = block.getFieldValue("PIN_EN");
+  const number_pin_d4 = block.getFieldValue("PIN_D4");
+  const number_pin_d5 = block.getFieldValue("PIN_D5");
+  const number_pin_d6 = block.getFieldValue("PIN_D6");
+  const number_pin_d7 = block.getFieldValue("PIN_D7");
+
+  generator.setVariableType(
+    variable_var,
+    "LiquidCrystal",
+    `${variable_var}(${[
+      number_pin_rs,
+      number_pin_en,
+      number_pin_d4,
+      number_pin_d5,
+      number_pin_d6,
+      number_pin_d7,
+    ].join(", ")});`
+  );
+
+  generator.addSetup(
+    `lcd_setup_${variable_var}`,
+    `${generator.INDENT}${variable_var}.begin(${number_dim_width}, ${number_dim_height});`
+  );
+
+  // TODO: Assemble javascript into the code variable.
+  const code = "";
+  return code;
+};
+
+generator.forBlock["arduino_lcd_print"] = function (block, generator) {
+  const variable_var = generator.getVariableName(block.getFieldValue("VAR"));
+  const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
+
+  const code = `${variable_var}.print(${value_value});\n`;
+  return code;
+};
+
+generator.forBlock["arduino_lcd_set_cursor"] = function (block, generator) {
+  const variable_var = generator.getVariableName(block.getFieldValue("VAR"));
+  const value_pos_x = generator.valueToCode(block, "POS_X", Order.ATOMIC);
+  const value_pos_y = generator.valueToCode(block, "POS_Y", Order.ATOMIC);
+
+  const code = `${variable_var}.setCursor(${value_pos_x}, ${value_pos_y});\n`;
+  return code;
+};
+
+generator.forBlock["arduino_lcd_clear"] = function (block, generator) {
+  const variable_var = generator.getVariableName(block.getFieldValue("VAR"));
+
+  const code = `${variable_var}.clear();\n`;
+  return code;
+};

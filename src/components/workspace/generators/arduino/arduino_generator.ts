@@ -283,13 +283,13 @@ export class ArduinoGenerator extends Blockly.CodeGenerator {
     }
   }
 
-  setVariableType(tag: string, code: string) {
+  setVariableType(tag: string, code: string, decl?: string) {
     console.log("setVariableType", this.definitions_);
     if (!this.definitions_[tag]) {
       throw new Error("variable doesn't exist");
     }
     const [_, varname] = this.definitions_[tag].split("@@");
-    this.definitions_[tag] = `${code}@@${varname}`;
+    this.definitions_[tag] = `${code}@@${decl ?? varname}`;
   }
 
   /**
