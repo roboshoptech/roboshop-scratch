@@ -183,6 +183,24 @@ export const BATROBOT_TOOLBOX_CONFIG = {
           kind: "block",
           type: "batrobot_output_stop_driving",
         },
+        {
+          kind: "label",
+          text: "Servo",
+        },
+        {
+          kind: "block",
+          type: "batrobot_output_servo_control",
+          inputs: {
+            ANGLE: {
+              shadow: {
+                type: "math_number",
+                fields: {
+                  NUM: 0,
+                },
+              },
+            },
+          },
+        },
       ],
     },
   ],
@@ -482,6 +500,30 @@ defineBlocksWithJsonArray([
     nextStatement: null,
     colour: 190,
   },
+  {
+    type: "batrobot_output_servo_control",
+    tooltip: "",
+    helpUrl: "",
+    message0: "move servo %1 to angle %2",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "PIN",
+        options: [
+          ["left", "10"],
+          ["right", "11"],
+        ],
+      },
+      {
+        type: "input_value",
+        name: "ANGLE",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
 ]);
 
 generator.forBlock["batrobot_input_ultrasonic_distance"] = function (
@@ -603,7 +645,7 @@ generator.forBlock["batrobot_output_drive_motor"] = function (
   const dropdown_dir = block.getFieldValue("DIR");
   const value_speed = generator.valueToCode(block, "SPEED", Order.ATOMIC);
 
-  const pins = dropdown_side === "LEFT" ? [6, 7, 8] : [5, 4, 3];
+  const pins = dropdown_side === "LEFT" ? [5, 4, 3] : [6, 7, 8];
 
   const code = `
 analogWrite(${pins[0]}, ${Math.max(0, Math.min(255, Number(value_speed)))});
@@ -726,4 +768,23 @@ generator.forBlock["batrobot_input_button_pressed"] = function (
 
   const code = `digitalRead(${dropdown_button})`;
   return [code, Order.ATOMIC];
+};
+
+generator.forBlock["batrobot_output_servo_control"] = function (
+  block,
+  generator
+) {
+  generator.addLibrary("Servo", "#include <Servo.h>");
+
+  const number_pin = block.getFieldValue("PIN");
+
+  generator.addVariable(`servo_${number_pin}`, `Servo servo_${number_pin};`);
+  generator.addSetup(
+    `servo_${number_pin}_attach`,
+    `${generator.INDENT}servo_${number_pin}.attach(${number_pin});`
+  );
+
+  const value_angle = generator.valueToCode(block, "ANGLE", Order.ATOMIC);
+  const code = `servo_${number_pin}.write(${value_angle});\n`;
+  return code;
 };
