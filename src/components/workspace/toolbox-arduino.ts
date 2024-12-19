@@ -314,6 +314,14 @@ export const ARDUINO_TOOLBOX_CONFIG = {
           kind: "block",
           type: "arduino_serial_flush",
         },
+        {
+          kind: "block",
+          type: "arduino_serial_available",
+        },
+        {
+          kind: "block",
+          type: "arduino_serial_read",
+        },
       ],
     },
     {
@@ -579,99 +587,7 @@ defineBlocksWithJsonArray([
     output: "STATE",
     colour: 180,
   },
-  {
-    type: "arduino_delay",
-    tooltip: "",
-    helpUrl: "",
-    message0: "wait %1 milliseconds %2",
-    args0: [
-      {
-        type: "input_value",
-        name: "VALUE",
-        align: "CENTRE",
-        check: "Number",
-      },
-      {
-        type: "input_dummy",
-        name: "D2",
-      },
-    ],
-    previousStatement: null,
-    nextStatement: null,
-    colour: 180,
-  },
-  {
-    type: "arduino_delaymicros",
-    tooltip: "",
-    helpUrl: "",
-    message0: "wait %1 microseconds %2",
-    args0: [
-      {
-        type: "input_value",
-        name: "VALUE",
-        align: "CENTRE",
-        check: "Number",
-      },
-      {
-        type: "input_dummy",
-        name: "D2",
-      },
-    ],
-    previousStatement: null,
-    nextStatement: null,
-    colour: 180,
-  },
-  {
-    type: "arduino_millis",
-    tooltip: "",
-    helpUrl: "",
-    message0: "milliseconds since program started %1",
-    args0: [
-      {
-        type: "input_dummy",
-        name: "NAME",
-      },
-    ],
-    output: "Number",
-    colour: 180,
-  },
-  {
-    type: "arduino_micros",
-    tooltip: "",
-    helpUrl: "",
-    message0: "microseconds since program started %1",
-    args0: [
-      {
-        type: "input_dummy",
-        name: "NAME",
-      },
-    ],
-    output: "Number",
-    colour: 180,
-  },
-  {
-    type: "arduino_servo_control",
-    tooltip: "",
-    helpUrl: "",
-    message0: "move servo at pin %1 to angle %2",
-    args0: [
-      {
-        type: "field_number",
-        name: "PIN",
-        value: 0,
-        min: 0,
-        max: 16,
-      },
-      {
-        type: "input_value",
-        name: "ANGLE",
-        check: "Number",
-      },
-    ],
-    previousStatement: null,
-    nextStatement: null,
-    colour: 180,
-  },
+
   {
     type: "arduino_transform",
     tooltip: "",
@@ -853,6 +769,79 @@ generator.forBlock["arduino_transform"] = function (block, generator) {
 
 /// Time
 
+defineBlocksWithJsonArray([
+  {
+    type: "arduino_delay",
+    tooltip: "",
+    helpUrl: "",
+    message0: "wait %1 milliseconds %2",
+    args0: [
+      {
+        type: "input_value",
+        name: "VALUE",
+        align: "CENTRE",
+        check: "Number",
+      },
+      {
+        type: "input_dummy",
+        name: "D2",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_delaymicros",
+    tooltip: "",
+    helpUrl: "",
+    message0: "wait %1 microseconds %2",
+    args0: [
+      {
+        type: "input_value",
+        name: "VALUE",
+        align: "CENTRE",
+        check: "Number",
+      },
+      {
+        type: "input_dummy",
+        name: "D2",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+  {
+    type: "arduino_millis",
+    tooltip: "",
+    helpUrl: "",
+    message0: "milliseconds since program started %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    output: "Number",
+    colour: 180,
+  },
+  {
+    type: "arduino_micros",
+    tooltip: "",
+    helpUrl: "",
+    message0: "microseconds since program started %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    output: "Number",
+    colour: 180,
+  },
+]);
+
 generator.forBlock["arduino_delay"] = function (block, generator) {
   const value_value = generator.valueToCode(block, "VALUE", Order.ATOMIC);
   const code = `delay(${value_value});\n`;
@@ -876,6 +865,32 @@ generator.forBlock["arduino_micros"] = function () {
 };
 
 /// Servo
+
+defineBlocksWithJsonArray([
+  {
+    type: "arduino_servo_control",
+    tooltip: "",
+    helpUrl: "",
+    message0: "move servo at pin %1 to angle %2",
+    args0: [
+      {
+        type: "field_number",
+        name: "PIN",
+        value: 0,
+        min: 0,
+        max: 16,
+      },
+      {
+        type: "input_value",
+        name: "ANGLE",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 180,
+  },
+]);
 
 generator.forBlock["arduino_servo_control"] = function (block, generator) {
   generator.addLibrary("Servo", "#include <Servo.h>");
@@ -1077,6 +1092,34 @@ defineBlocksWithJsonArray([
     nextStatement: null,
     colour: 180,
   },
+  {
+    type: "arduino_serial_available",
+    tooltip: "",
+    helpUrl: "",
+    message0: "Bluetooth available %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    output: "Boolean",
+    colour: 180,
+  },
+  {
+    type: "arduino_serial_read",
+    tooltip: "",
+    helpUrl: "",
+    message0: "Read data from Bluetooth %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    output: "String",
+    colour: 180,
+  },
 ]);
 
 generator.forBlock["arduino_serial_speed"] = function (block, generator) {
@@ -1162,9 +1205,18 @@ Serial.println(${value_value});\n`;
 };
 
 generator.forBlock["arduino_serial_flush"] = function () {
-  // TODO: Assemble javascript into the code variable.
   const code = "Serial.flush();\n";
   return code;
+};
+
+generator.forBlock["arduino_serial_available"] = function () {
+  const code = `Serial.available()`;
+  return [code, Order.ATOMIC];
+};
+
+generator.forBlock["arduino_serial_read"] = function () {
+  const code = `Serial.read()`;
+  return [code, Order.ATOMIC];
 };
 
 function isPin(v: string) {
