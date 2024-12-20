@@ -12,13 +12,13 @@ export const BATROBOT_TOOLBOX_MAX_INSTANCES = {
 export const BATROBOT_TOOLBOX_CONFIG = {
   kind: "category",
   name: "BatRobot",
-  colour: "190",
+  colour: "195",
   expanded: "true",
   contents: [
     {
       kind: "category",
       name: "Input",
-      colour: "190",
+      colour: "195",
       contents: [
         {
           kind: "block",
@@ -45,7 +45,7 @@ export const BATROBOT_TOOLBOX_CONFIG = {
     {
       kind: "category",
       name: "Output",
-      colour: "190",
+      colour: "195",
       contents: [
         {
           kind: "label",
@@ -98,6 +98,42 @@ export const BATROBOT_TOOLBOX_CONFIG = {
               },
             },
             BLUE: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 128 },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "batrobot_output_chainled_set",
+          inputs: {
+            C_RED: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 128 },
+              },
+            },
+            C_GREEN: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 128 },
+              },
+            },
+            C_BLUE: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 128 },
+              },
+            },
+          },
+        },
+        {
+          kind: "block",
+          type: "batrobot_output_chainled_set_brightness",
+          inputs: {
+            LUM: {
               shadow: {
                 type: "math_number",
                 fields: { NUM: 128 },
@@ -232,7 +268,7 @@ defineBlocksWithJsonArray([
       },
     ],
     output: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_input_read_light_sensor",
@@ -259,7 +295,7 @@ defineBlocksWithJsonArray([
       },
     ],
     output: "Number",
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_input_button1_press",
@@ -276,7 +312,7 @@ defineBlocksWithJsonArray([
         name: "HANDLER",
       },
     ],
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_input_button_pressed",
@@ -298,7 +334,7 @@ defineBlocksWithJsonArray([
       },
     ],
     output: "Boolean",
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_drive_forward",
@@ -314,7 +350,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_drive_backward",
@@ -330,7 +366,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_turn_right",
@@ -346,7 +382,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_turn_left",
@@ -362,7 +398,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_drive_motor",
@@ -394,7 +430,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
 
   {
@@ -410,7 +446,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_start_buzz",
@@ -425,7 +461,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_stop_buzz",
@@ -440,7 +476,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_start_fan",
@@ -455,7 +491,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_stop_fan",
@@ -470,7 +506,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_set_led",
@@ -498,7 +534,7 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 190,
+    colour: 195,
   },
   {
     type: "batrobot_output_servo_control",
@@ -522,7 +558,65 @@ defineBlocksWithJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 180,
+    colour: 195,
+  },
+  {
+    type: "batrobot_output_chainled_set",
+    tooltip: "",
+    helpUrl: "",
+    message0: "set chain LED %1 %2 to color, red %3 green %4 blue %5",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "PIXEL",
+        options: [
+          ["left", "0"],
+          ["right", "1"],
+          // ["both", "2"],
+        ],
+      },
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+      {
+        type: "input_value",
+        name: "C_RED",
+        align: "RIGHT",
+        check: "Number",
+      },
+      {
+        type: "input_value",
+        name: "C_GREEN",
+        align: "RIGHT",
+        check: "Number",
+      },
+      {
+        type: "input_value",
+        name: "C_BLUE",
+        align: "RIGHT",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 195,
+  },
+  {
+    type: "batrobot_output_chainled_set_brightness",
+    tooltip: "",
+    helpUrl: "",
+    message0: "set chain LED brightness to %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "LUM",
+        check: "Number",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 195,
   },
 ]);
 
@@ -786,5 +880,44 @@ generator.forBlock["batrobot_output_servo_control"] = function (
 
   const value_angle = generator.valueToCode(block, "ANGLE", Order.ATOMIC);
   const code = `servo_${number_pin}.write(${value_angle});\n`;
+  return code;
+};
+
+generator.forBlock["batrobot_output_chainled_set"] = function (
+  block,
+  generator
+) {
+  generator.addLibrary("Adafruit_NeoPixel", "#include <Adafruit_NeoPixel.h>");
+  generator.addVariable(
+    "chainled",
+    "Adafruit_NeoPixel chainled(2, 9, NEO_GRB + NEO_KHZ800);"
+  );
+  generator.addSetup("chainled_pin", `${generator.INDENT}pinMode(9, OUTPUT);`);
+  generator.addSetup("chainled", `${generator.INDENT}chainled.begin();`);
+
+  const dropdown_pixel = block.getFieldValue("PIXEL");
+  const value_c_red = generator.valueToCode(block, "C_RED", Order.ATOMIC);
+  const value_c_green = generator.valueToCode(block, "C_GREEN", Order.ATOMIC);
+  const value_c_blue = generator.valueToCode(block, "C_BLUE", Order.ATOMIC);
+
+  const color = `chainled.Color(${value_c_red}, ${value_c_green}, ${value_c_blue})`;
+  const code = `chainled.setPixelColor(${dropdown_pixel}, ${color});\nchainled.show();\n`;
+  return code;
+};
+
+generator.forBlock["batrobot_output_chainled_set_brightness"] = function (
+  block,
+  generator
+) {
+  generator.addLibrary("Adafruit_NeoPixel", "#include <Adafruit_NeoPixel.h>");
+  generator.addVariable(
+    "chainled",
+    "Adafruit_NeoPixel chainled(2, 9, NEO_GRB + NEO_KHZ800);"
+  );
+  generator.addSetup("chainled", `${generator.INDENT}chainled.begin();\n`);
+
+  const value_lum = generator.valueToCode(block, "LUM", Order.ATOMIC);
+
+  const code = `chainled.setBrightness(${value_lum});\n`;
   return code;
 };
